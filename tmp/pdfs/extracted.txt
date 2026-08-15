@@ -1,0 +1,665 @@
+M
+
+mango
+
+TEAM PRODUCT + DATA GUIDE
+
+A better way to
+find your place
+in Stamford.
+
+Mango turns scattered local opportunities into one
+plan that fits - and people to go with.
+
+THE PRODUCT THESIS
+
+What should I do? Why does it fit? Who can
+I go with?
+
+Stamford, Connecticut - Hackathon edition
+
+mango
+
+M
+
+PRODUCT IN ONE MINUTE
+
+WHAT MANGO IS
+
+Local life, made
+actionable.
+Stamford already has events, recreation, volunteering, student activities, public
+programs, and great local places. The problem is that they live in different places
+- and people still do not know what fits them.
+
+CITY
+
+PARKS + REC
+
+UCONN
+MANGO ADDS INTELLIGENCE
+
+NONPROFITS
+
+EVENTS
+
+LOCAL PLACES
+
+M
+
+One strong
+recommendation
+Matched to your time, location, budget, interests, social
+comfort, and access needs.
+
+IMPORTANT
+
+!
+
+Mango is not another event calendar. It is the layer that helps someone choose, join, and participate offline.
+
+Mango team guide - Hackathon edition
+
+02 / 12
+
+M
+
+mango
+
+PEOPLE + PILLARS
+
+WHO MANGO SERVES
+
+Three audiences. One local
+need.
+01
+
+02
+
+03
+
+Stamford residents
+
+UConn Stamford
+students
+
+New residents
+
+A better local social life, useful ways to
+spend free time, and stronger ties to the
+city.
+
+Things to do between or after classes,
+people to meet, and reasons to explore
+beyond campus.
+
+A friendly way to learn the city, find
+recurring places, and build a local network.
+
+QUALITY OF LIFE
+
+CIVIC ENGAGEMENT
+
+STUDENT LIFE
+
+Use free time better.
+
+Turn information into participation.
+
+Make commuter life feel connected.
+
+THE THREE PRODUCT PILLARS
+
+Mango team guide - Hackathon edition
+
+03 / 12
+
+mango
+
+M
+
+CORE EXPERIENCE
+
+THE ONE STRONG HAPPY PATH
+
+From free time to a real plan.
+1
+
+2
+
+3
+
+4
+
+5
+
+TELL
+
+SCAN
+
+MATCH
+
+EXPLAIN
+
+JOIN
+
+A user shares time,
+mood, budget, location,
+and whether they want
+company.
+
+Mango searches
+Stamford events, places,
+civic programs, and
+student activities.
+
+The best-fit option is
+ranked against the user's
+needs and compatible
+people.
+
+Mango says why the plan
+fits using known facts no invented details.
+
+The user joins one plan
+and sees their small
+group or personalized
+week.
+
+EXAMPLE REQUEST
+ONE PLAN
+
+I'm free Saturday afternoon, want to meet people, and
+would like to do something useful outdoors.
+
+Mango team guide - Hackathon edition
+
+Not a list of 25 links.
+
+04 / 12
+
+M
+
+mango
+
+CONVERSATION EXAMPLE
+
+TEXT FIRST
+
+The conversation is the
+onboarding.
+
+M
+
+Mango
+Stamford's local friend
+
+I'm free Saturday afternoon. I want to get
+outside, meet people, and do something
+useful. Nothing expensive.
+
+Mango asks only what it needs. The user gets value before filling out a
+profile.
+
+01
+
+Ask with a reason
+
+I'd pick Mill River Community Cleanup - Sat 1 PM,
+Downtown. It is free, outdoors, and four compatible
+people are interested.
+
+Only ask for information that improves the next recommendation.
+
+Reply JOIN
+
+02
+
+Recommend one
+
+JOIN
+
+A clear opinion beats a long directory.
+
+03
+
+Explain the fit
+Time, place, price, access, interest, and social signals.
+
+04
+
+You're in. I added the cleanup to your Mango plan
+and saved your group.
+
+Make JOIN simple
+The final action is deterministic and easy to confirm.
+
+Mango team guide - Hackathon edition
+
+05 / 12
+
+M
+
+mango
+
+RECOMMENDATION EXAMPLES
+
+WHAT THE PRODUCT RETURNS
+
+One card. A clear reason. A next step.
+BEST CIVIC MATCH
+
+STUDENT PICK
+
+94%
+
+QUALITY-OF-LIFE PICK
+
+91%
+
+88%
+
+Mill River Community
+Cleanup
+
+UConn Student Game
+Night
+
+Harbor Point Sunset
+Walk
+
+SAT 1 PM - DOWNTOWN - FREE
+
+THU 5:30 PM - CAMPUS - FREE
+
+FRI 6:15 PM - 1.2 MI - FREE
+
+WHY MANGO PICKED IT
+
+WHY MANGO PICKED IT
+
+WHY MANGO PICKED IT
+
+Fits Saturday afternoon, outdoor preference, civic
+intent, and small-group comfort.
+
+Starts after class, costs nothing, and has a
+low-pressure social format nearby.
+
+Matches a short evening window, outdoor interest,
+and a relaxed social pace.
+
+4 compatible people
+
+6 students interested
+
+3 nearby matches
+
+Illustrative sample records for the hackathon prototype. Live details must always come from a verified source.
+
+Mango team guide - Hackathon edition
+
+06 / 12
+
+M
+
+mango
+
+CIVIC ENGAGEMENT
+
+THE CIVIC PROMISE
+
+Participation, not just
+information.
+A city calendar can say what exists. Mango should help someone see
+why it matters to them and make joining feel easy.
+
+BEFORE
+
+Parks & Rec has an event Saturday.
+
+WITH MANGO
+
+This event fits your schedule and interests. Three
+residents and two UConn students are also
+interested. Join them?
+JOIN THE PLAN
+
+Mango team guide - Hackathon edition
+
+07 / 12
+
+mango
+
+M
+
+DATASET BLUEPRINT
+
+WHAT MANGO MUST KNOW
+
+A living map of Stamford
+opportunities.
+Market research finds the sources. Data building turns each source into consistent, searchable records.
+
+CT
+
+City + public
+
+City calendar, public meetings, community
+initiatives, public services
+
+VO
+
+Volunteer
+
+Cleanups, food support, mentoring, nonprofit and
+neighborhood needs
+
+PR
+
+Parks + Rec
+
+Programs, sports, classes, park events, registration
+and capacity
+
+EV
+
+Culture + events
+
+Libraries, museums, arts, music, festivals, markets,
+talks
+
+UC
+
+UConn Stamford
+
+Student organizations, campus events, workshops,
+academic breaks
+
+LP
+
+Local places
+
+Businesses, venues, cafes, parks, trails, recurring
+activities
+
+RESEARCH QUESTION
+
+Can Mango answer: what is happening, when, where, what does it cost, who can attend, how accessible is it, and how trustworthy is the
+record?
+
+Mango team guide - Hackathon edition
+
+08 / 12
+
+M
+
+mango
+
+CANONICAL RECORD
+
+FIELDS EVERY DATASET NEEDS
+
+Normalize first. Recommend
+second.
+Identity
+
+What
+
+When
+
+source_id + source_url
+
+title + plain-language summary
+
+start + end date/time
+
+organizer + source organization
+
+interests + activity tags
+
+timezone + recurrence
+
+record type + category tags
+
+civic / student / social signal
+
+registration deadline
+
+last verified timestamp
+
+indoor / outdoor + effort level
+
+cancellation / sold-out status
+
+Where
+
+Access
+
+Trust
+
+venue + full address
+
+price + free flag
+
+source updated timestamp
+
+neighborhood + latitude/longitude
+
+age or eligibility rules
+
+collection method
+
+distance / transit context
+
+accessibility notes
+
+confidence / completeness score
+
+virtual or in-person
+
+registration, capacity, equipment
+
+change history + owner
+
+Mango team guide - Hackathon edition
+
+09 / 12
+
+M
+
+mango
+
+MATCHING + PRIVACY
+
+THE INTELLIGENCE LAYER
+
+Fit is more than an interest tag.
+WHO YOU ARE
+
+availability + location
+budget + travel mode
+
+WHAT IS HAPPENING
+
+M
+
+interests + activity style
+
+time + duration
+place + distance
+price + eligibility
+
+student / resident context
+
+MANGO MATCH
+
+indoor / outdoor + effort
+
+group size + crowd comfort
+
+What should you do and who should you do
+it with?
+
+social format + capacity
+
+accessibility needs
+
+status + source trust
+
+PRIVACY RULE
+
+Show aggregate social proof, not private profiles. Never reveal phone numbers, exact home addresses, surnames, or sensitive
+answers. Ask before using social matching.
+
+Mango team guide - Hackathon edition
+
+10 / 12
+
+M
+
+mango
+
+RESEARCH + DATA PLAYBOOK
+
+HOW THE TEAM SHOULD WORK
+
+Build the smallest trustworthy dataset.
+For the hackathon, depth and consistency across 50-100 useful records matters more than scraping everything.
+
+1
+
+Map sources
+
+List the calendars,
+organizations, owners,
+formats, and update frequency.
+
+2
+
+Collect
+
+Prefer official feeds, exports,
+APIs, or approved manual
+capture.
+
+3
+
+Normalize
+
+4
+
+Convert each source to the
+shared Mango fields and tag
+vocabulary.
+
+MARKET RESEARCHER CHECKLIST
+
+Who owns the source and how often does it change?
+
+Check date, location, cost,
+access, registration, and live
+status.
+
+5
+
+Refresh
+
+Track last verified time,
+changes, cancellations, and
+source failures.
+
+HACKATHON DATA PRIORITY
+P0
+
+Core facts
+title, time, place, cost, status, source
+
+Which fields are present, missing, ambiguous, or stale?
+Is registration required and does availability change?
+
+Verify
+
+P1
+
+Is the opportunity realistic for students, residents, and new arrivals?
+
+Fit fields
+tags, outdoor, duration, distance, access
+
+Can the team collect and refresh it reliably and with permission?
+P2
+
+Social fields
+group format, capacity, interest counts
+
+P3
+
+Enrichment
+images, reviews, weather, popularity
+
+Mango team guide - Hackathon edition
+
+11 / 12
+
+M
+
+mango
+
+MVP + SUCCESS
+
+WHAT WE ARE BUILDING NOW
+
+One excellent offline outcome.
+PREFERENCE
+
+SEARCH
+
+RECOMMEND
+
+MATCH
+
+JOIN
+
+I have Saturday
+afternoon.
+
+Find verified local
+options.
+
+Pick one and
+explain why.
+
+Show a
+small-group signal.
+
+Move toward
+attendance.
+
+SUCCESS IS NOT ANOTHER CLICK
+
+PRIMARY
+
+BEHAVIOR
+
+COMMUNITY
+
+CONNECTION
+
+Did the user participate
+offline?
+
+Plans joined and attendance
+
+Civic, student, and repeat
+participation
+
+New local relationships
+
+Research what exists. Structure what matters. Help Stamford show up.
+
+Mango team guide - Hackathon edition
+
+12 / 12
+
+
