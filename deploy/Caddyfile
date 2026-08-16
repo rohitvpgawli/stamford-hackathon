@@ -1,0 +1,9 @@
+13-203-194-134.sslip.io {
+  encode gzip
+  reverse_proxy 127.0.0.1:3001
+  header {
+    Strict-Transport-Security "max-age=31536000"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+  }
+}

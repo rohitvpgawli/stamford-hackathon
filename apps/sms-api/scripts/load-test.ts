@@ -1,0 +1,6 @@
+import { buildApp } from '../src/server.js';
+import { MangoDb } from '../src/db.js';
+const rt=buildApp({db:new MangoDb(),webhookSecret:'load-secret'}); const started=Date.now();
+const send=(id:string,from:string,text:string)=>rt.app.inject({method:'POST',url:'/v1/channels/android/inbound',headers:{'x-mango-webhook-secret':'load-secret','content-type':'application/json'},payload:{provider:'load',provider_message_id:id,from,text}});
+for(let round=0;round<3;round++){await Promise.all(Array.from({length:100},(_,i)=>send(`${round}-${i}` ,`+1203555${String(10000+i).padStart(4,'0')}`,round===0?'hello':round===1?`Name${i}`:'outdoors useful')));}
+await rt.drain(); const users=Array.from({length:100},(_,i)=>rt.db.getUserByPhone(`+1203555${String(10000+i).padStart(4,'0')}`)); const unique=new Set(users.map(u=>u?.id)); const isolated=users.every(u=>u&&rt.db.allMessages(u.id).every(m=>m.session_id===rt.db.activeSession(u.id).id)); const inbound=rt.db.inboundStats(); const completed=Number(inbound.find((x:any)=>x.status==='completed')?.count||0); const elapsed=Date.now()-started; console.log(JSON.stringify({users:unique.size,isolated,inbound,completed,elapsed_ms:elapsed,queue:rt.db.queueStats()},null,2)); if(unique.size!==100||!isolated||completed<300) process.exitCode=1; rt.stopWorker(); await rt.app.close();

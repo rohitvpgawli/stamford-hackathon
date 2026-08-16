@@ -1,0 +1,4 @@
+import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
+const b64=(s:string|Buffer)=>Buffer.from(s).toString('base64url');
+export function signAppToken(userId:string,sessionId:string,secret:string,ttlHours=24) { const payload={user_id:userId,session_id:sessionId,iat:Date.now(),exp:Date.now()+ttlHours*3600000,nonce:randomUUID()}; const p=b64(JSON.stringify(payload)); const sig=b64(createHmac('sha256',secret).update(p).digest()); return `${p}.${sig}`; }
+export function verifyAppToken(token:string,secret:string) { try { const [p,s]=token.split('.'); if(!p||!s) return null; const expected=createHmac('sha256',secret).update(p).digest(), actual=Buffer.from(s,'base64url'); if(expected.length!==actual.length||!timingSafeEqual(expected,actual)) return null; const c=JSON.parse(Buffer.from(p,'base64url').toString()); if(c.exp<Date.now()) return null; return c as {user_id:string;session_id:string;iat:number;exp:number;nonce:string}; } catch { return null; } }

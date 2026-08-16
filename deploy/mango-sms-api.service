@@ -1,0 +1,19 @@
+[Unit]
+Description=Mango Stamford SMS API
+After=network.target
+
+[Service]
+Type=simple
+User=mango
+WorkingDirectory=/opt/mango/stamford-hackathon
+EnvironmentFile=/opt/mango/stamford-hackathon/.env
+ExecStart=/usr/bin/node apps/sms-api/dist/src/index.js
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/mango/stamford-hackathon/data
+
+[Install]
+WantedBy=multi-user.target
