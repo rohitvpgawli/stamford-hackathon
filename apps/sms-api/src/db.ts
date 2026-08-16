@@ -9,6 +9,7 @@ export interface UserRow { id:string; phone_hash:string; phone_ciphertext:string
 export interface SessionRow { id:string; user_id:string; channel:string; state:SessionState; started_at:string; last_activity_at:string; expires_at:string; inbound_turns:number; recommendation_count:number; warning_sent_at:string|null; cutoff_sent_at:string|null; active_recommendation_id:string|null; pending_action_json:string|null; summary:string|null; version:number; }
 export interface OpportunityRow { id:string; kind:string; title:string; description:string; venue_name:string; neighborhood:string; starts_at:string|null; ends_at:string|null; recurring_text:string|null; price_cents:number; status:string; tags_json:string; audience_json:string; group_style:string; accessibility_json:string; transport_notes:string; source_name:string; source_url:string; is_demo_data:number; quality:number; }
 export interface ProfileFactRow { id:string; user_id:string; key:string; value_json:string; confidence:number; source_message_id:string|null; sensitivity:string; expires_at:string|null; }
+export interface MatchCandidate { personaId:string; firstName:string; score:number; sharedTags:string[]; }
 
 const now = () => new Date().toISOString();
 export class MangoDb {
@@ -87,8 +88,15 @@ export class MangoDb {
   inboundStats() { return this.db.prepare("SELECT status,COUNT(*) as count FROM inbound_jobs GROUP BY status").all() as any[]; }
   insertOutboundMessage(providerId:string,sessionId:string,text:string) { const id=randomUUID(); this.db.prepare('INSERT INTO messages (id,provider_message_id,session_id,direction,text,delivery_status,created_at) VALUES (?,?,?,\'outbound\',?,\'queued\',?)').run(id,providerId,sessionId,text,now()); return id; }
   setMessageIntent(id:string,intent:string,safety:string) { this.db.prepare('UPDATE messages SET intent=?,safety_label=? WHERE id=?').run(intent,safety,id); }
-  facts(userId:string) { return this.db.prepare('SELECT * FROM profile_facts WHERE user_id=?').all(userId) as unknown as ProfileFactRow[]; }
-  setFact(userId:string,key:string,value:unknown,confidence:number,sourceMessageId?:string,expiresAt?:string) { const t=now(); this.db.prepare(`INSERT INTO profile_facts (id,user_id,key,value_json,confidence,source_message_id,expires_at,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(user_id,key) DO UPDATE SET value_json=excluded.value_json,confidence=excluded.confidence,source_message_id=excluded.source_message_id,expires_at=excluded.expires_at,updated_at=excluded.updated_at`).run(randomUUID(),userId,key,JSON.stringify(value),confidence,sourceMessageId||null,expiresAt||null,t,t); }
+  facts(userId:string) { return this.db.prepare('SELECT * FROM profile_facts WHERE user_id=? AND (expires_at IS NULL OR expires_at>?)').all(userId,now()) as unknown as ProfileFactRow[]; }
+  // One overwrite rule for every caller: a higher-confidence stored fact wins, except
+  // interest.tags, which merges additively so new interests never erase learned ones.
+  setFact(userId:string,key:string,value:unknown,confidence:number,sourceMessageId?:string,expiresAt?:string) {
+    const existing=this.facts(userId).find(f=>f.key===key);
+    if(key==='interest.tags'&&existing){ const merged=[...new Set([...(JSON.parse(existing.value_json) as string[]),...(Array.isArray(value)?value as string[]:[])])].slice(0,12); value=merged; confidence=Math.max(confidence,existing.confidence); }
+    else if(existing&&existing.confidence>confidence) return;
+    const t=now(); this.db.prepare(`INSERT INTO profile_facts (id,user_id,key,value_json,confidence,source_message_id,expires_at,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(user_id,key) DO UPDATE SET value_json=excluded.value_json,confidence=excluded.confidence,source_message_id=excluded.source_message_id,expires_at=excluded.expires_at,updated_at=excluded.updated_at`).run(randomUUID(),userId,key,JSON.stringify(value),confidence,sourceMessageId||null,expiresAt||null,t,t);
+  }
   getOpportunity(id:string) { return this.db.prepare('SELECT * FROM opportunities WHERE id=?').get(id) as OpportunityRow|undefined; }
   listOpportunities() { return this.db.prepare("SELECT * FROM opportunities WHERE status='active'").all() as unknown as OpportunityRow[]; }
   exposures(sessionId:string) { return this.db.prepare('SELECT * FROM recommendation_exposures WHERE session_id=? ORDER BY shown_at').all(sessionId) as any[]; }
@@ -96,7 +104,30 @@ export class MangoDb {
   markExposure(sessionId:string,opportunityId:string,outcome:string) { this.db.prepare('UPDATE recommendation_exposures SET outcome=? WHERE session_id=? AND opportunity_id=?').run(outcome,sessionId,opportunityId); }
   createJoin(userId:string,oppId:string,sessionId:string) { const existing=this.db.prepare('SELECT * FROM joins WHERE user_id=? AND opportunity_id=?').get(userId,oppId) as any; if(existing) return existing; const id=randomUUID(); this.db.prepare("INSERT INTO joins (id,user_id,opportunity_id,session_id,status,joined_at,source) VALUES (?,?,?,?,'joined',?,'sms')").run(id,userId,oppId,sessionId,now()); this.markExposure(sessionId,oppId,'joined'); return this.db.prepare('SELECT * FROM joins WHERE id=?').get(id) as any; }
   joined(userId:string) { return this.db.prepare('SELECT j.*,o.title,o.description,o.venue_name,o.neighborhood,o.starts_at,o.ends_at,o.tags_json FROM joins j JOIN opportunities o ON o.id=j.opportunity_id WHERE j.user_id=? ORDER BY j.joined_at DESC').all(userId) as any[]; }
-  compatibleCount(userId:string,oppId:string) { const userFacts=this.facts(userId); const tags=new Set(userFacts.filter(f=>f.key==='interest.tags').flatMap(f=>{const v=JSON.parse(f.value_json);return Array.isArray(v)?v as string[]:[]})); const o=this.getOpportunity(oppId); if(!o) return 0; const tagArr=JSON.parse(o.tags_json) as string[]; const base=personas.filter((p:any)=>p.socialOptIn&&p.interests.some((i:string)=>tagArr.includes(i))); return Math.min(5,Math.max(0,base.length ? (base.length%4)+2 : 0)); }
+  userInterestTags(userId:string):string[] { const f=this.facts(userId).find(x=>x.key==='interest.tags'); if(!f) return []; const v=JSON.parse(f.value_json); return Array.isArray(v)?v as string[]:[]; }
+  socialOptedIn(userId:string) { const f=this.facts(userId).find(x=>x.key==='social.opt_in'); return !!f && JSON.parse(f.value_json)===true; }
+  // A match requires the triple overlap: user interests ∩ persona interests ∩ opportunity tags.
+  // No stored interests means no match claims at all.
+  matchesFor(userId:string,oppId:string):MatchCandidate[] {
+    const userTags=new Set(this.userInterestTags(userId)); if(!userTags.size) return [];
+    const o=this.getOpportunity(oppId); if(!o) return [];
+    const oppTags=new Set(JSON.parse(o.tags_json) as string[]);
+    const scored:MatchCandidate[]=[];
+    for(const p of personas){
+      if(!p.socialOptIn) continue;
+      const sharedTags=p.interests.filter(i=>oppTags.has(i)&&userTags.has(i));
+      if(!sharedTags.length) continue;
+      let score=sharedTags.length*10;
+      if(p.neighborhood===o.neighborhood) score+=3;
+      if(p.groupSize===o.group_style) score+=2;
+      scored.push({personaId:p.id,firstName:p.firstName,score,sharedTags});
+    }
+    return scored.sort((a,b)=>b.score-a.score||a.personaId.localeCompare(b.personaId)).slice(0,3);
+  }
+  recordMatches(userId:string,oppId:string,matches:MatchCandidate[]) { this.db.prepare("DELETE FROM matches WHERE opportunity_id=? AND user_a_id=? AND state='suggested'").run(oppId,userId); const stmt=this.db.prepare("INSERT INTO matches (id,opportunity_id,user_a_id,user_b_id,score,reason_codes_json,state,created_at) VALUES (?,?,?,?,?,?,'suggested',?)"); for(const m of matches) stmt.run(randomUUID(),oppId,userId,m.personaId,m.score,JSON.stringify(m.sharedTags),now()); }
+  storedMatches(userId:string,oppId?:string):MatchCandidate[] { const rows=(oppId?this.db.prepare('SELECT * FROM matches WHERE user_a_id=? AND opportunity_id=? ORDER BY score DESC,user_b_id').all(userId,oppId):this.db.prepare('SELECT * FROM matches WHERE user_a_id=? ORDER BY created_at DESC,score DESC,user_b_id').all(userId)) as any[]; const seen=new Set<string>(); const out:MatchCandidate[]=[]; for(const r of rows){ if(seen.has(r.user_b_id)) continue; seen.add(r.user_b_id); const p=personas.find(x=>x.id===r.user_b_id); if(p) out.push({personaId:p.id,firstName:p.firstName,score:r.score,sharedTags:JSON.parse(r.reason_codes_json)}); } return out; }
+  joinCount(oppId:string,excludeUserId?:string) { return Number((this.db.prepare('SELECT COUNT(*) as n FROM joins WHERE opportunity_id=? AND user_id<>?').get(oppId,excludeUserId||'') as any)?.n||0); }
+  compatibleCount(userId:string,oppId:string) { return this.matchesFor(userId,oppId).length; }
   enqueue(userId:string,sessionId:string,text:string,dedupeKey:string) { const u=this.getUser(userId)!; try { this.db.prepare('INSERT INTO outbound_jobs (id,user_id,destination,text,order_key,next_attempt_at,dedupe_key,created_at) VALUES (?,?,?,?,?,?,?,?)').run(randomUUID(),userId,u.phone_ciphertext,text,sessionId,now(),dedupeKey,now()); } catch(e:any) { if(!String(e.message).includes('UNIQUE')) throw e; } return this.db.prepare('SELECT * FROM outbound_jobs WHERE dedupe_key=?').get(dedupeKey) as any; }
   readyJobs(limit=20) { return this.db.prepare("SELECT * FROM outbound_jobs WHERE status='queued' AND next_attempt_at<=? ORDER BY created_at LIMIT ?").all(now(),limit) as any[]; }
   markJobSent(id:string,providerId:string) { this.db.prepare("UPDATE outbound_jobs SET status='sent',provider_id=?,sent_at=?,attempt_count=attempt_count+1 WHERE id=?").run(providerId,now(),id); }
