@@ -18,7 +18,7 @@ Real, hardcoded Stamford data for the `opportunities` seed table defined in the 
 
 ## What's done
 - All 49 entries researched with real names, addresses, and a source link each
-- Data lives in `data/Mango_Stamford_Dataset.xlsx`, converts to `packages/seed-data/opportunities.json` via `scripts/convert_to_json.py`
+- Data lives in `Mango_Stamford_Dataset.xlsx`, converts to `opportunities.json` via `convert_to_json.py`, and is loaded by the Mango seed package into SQLite.
 - Photos dropped from scope — no reliable way to source hotlinkable images safely. Using `source_url` as a "learn more" click-through instead (already present on every row, no extra work needed)
 
 ## Verified vs needs-check

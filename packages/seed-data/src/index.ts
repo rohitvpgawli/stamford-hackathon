@@ -1,15 +1,16 @@
+import { readFileSync } from 'node:fs';
 import type { OpportunityKind, OpportunityStatus } from '@mango/contracts';
 
-export interface SeedOpportunity { id:string; kind:OpportunityKind; title:string; description:string; venueName:string; neighborhood:string; startsAt?:string; endsAt?:string; recurringText?:string; priceCents:number; status:OpportunityStatus; tags:string[]; audience:string[]; groupStyle:'solo_ok'|'small'|'medium'|'crowd'; accessibility:string[]; transportNotes:string; quality:number; }
+export interface SeedOpportunity { id:string; kind:OpportunityKind; title:string; description:string; venueName:string; neighborhood:string; startsAt?:string; endsAt?:string; recurringText?:string; priceCents:number; status:OpportunityStatus; tags:string[]; audience:string[]; groupStyle:'solo_ok'|'small'|'medium'|'crowd'; accessibility:string[]; transportNotes:string; sourceName:string; sourceUrl:string; isDemoData:boolean; quality:number; }
 export interface SeedPersona { id:string; firstName:string; userType:'resident'|'student'|'new_resident'; neighborhood:string; ageBand:string; interests:string[]; groupSize:'small'|'medium'|'crowd'; socialOptIn:boolean; transport:string; availability:string[]; }
 
 const iso = (days:number, hour:number, minute=0) => { const d = new Date(); d.setUTCHours(hour, minute, 0, 0); d.setUTCDate(d.getUTCDate()+days); return d.toISOString(); };
 const end = (days:number, hour:number, duration=2) => { const d = new Date(iso(days,hour)); d.setUTCHours(d.getUTCHours()+duration); return d.toISOString(); };
 const nextSaturday = (()=>{ const day=new Date().getUTCDay(); return ((6-day+7)%7)||7; })();
 const nextSunday = (()=>{ const day=new Date().getUTCDay(); return ((7-day)%7)||7; })();
-const base = (id:string,title:string,kind:OpportunityKind,tags:string[],neighborhood:string,days:number,hour:number,priceCents=0,groupStyle:'solo_ok'|'small'|'medium'|'crowd'='small'):SeedOpportunity => ({id,title,kind,tags,neighborhood,venueName: neighborhood+' public venue',description:'A friendly Mango demo opportunity in Stamford.',startsAt:iso(days,hour),endsAt:end(days,hour),priceCents,status:'active',audience:['all'],groupStyle,accessibility:['step-free entrance unknown'],transportNotes:'Public venue; check transit before leaving.',quality:70});
+const base = (id:string,title:string,kind:OpportunityKind,tags:string[],neighborhood:string,days:number,hour:number,priceCents=0,groupStyle:'solo_ok'|'small'|'medium'|'crowd'='small'):SeedOpportunity => ({id,title,kind,tags,neighborhood,venueName: neighborhood+' public venue',description:'A friendly Mango demo opportunity in Stamford.',startsAt:iso(days,hour),endsAt:end(days,hour),priceCents,status:'active',audience:['all'],groupStyle,accessibility:['step-free entrance unknown'],transportNotes:'Public venue; check transit before leaving.',sourceName:'Mango demo seed',sourceUrl:'https://demo.mango.local/opportunities/'+id,isDemoData:true,quality:70});
 
-export const opportunities: SeedOpportunity[] = [
+const deterministicOpportunities: SeedOpportunity[] = [
   { ...base('opp-soccer','Scalzi Park Pickup Soccer','event',['soccer','sports','fitness','outdoors','social','free'],'North Stamford',nextSunday,14,0,'medium'), venueName:'Scalzi Park', description:'A friendly co-ed pickup soccer game; bring water and a light and dark shirt.', audience:['resident','student','new_resident','all'], accessibility:['outdoor'], quality:92 },
   { ...base('opp-cleanup','Mill River Community Cleanup','volunteer',['civic','outdoors','useful','volunteer'],'Downtown',nextSaturday,13,0,'small'), venueName:'Mill River Park', description:'Help tidy a public stretch of Mill River with a small, welcoming crew.', audience:['resident','student','new_resident','all'], accessibility:['outdoor'], quality:98 },
   { ...base('opp-study-walk','UConn Stamford Between-Classes Study Walk','campus',['student','outdoors','study','free'],'Campus',1,12,0,'small'), venueName:'UConn Stamford campus', description:'A flexible campus-adjacent walk and study reset for students between classes.', audience:['student'], recurringText:'Flexible 45-minute drop-in', quality:96 },
@@ -45,6 +46,42 @@ export const opportunities: SeedOpportunity[] = [
   { ...base('opp-unavailable-sold','Sold Out Downtown Concert','event',['arts','social'],'Downtown',3,20,2500,'crowd'), venueName:'Downtown Theater', description:'Unavailable demo record.', status:'sold_out', quality:0 },
   { ...base('opp-unavailable-expired','Expired Park Workshop','event',['outdoors'],'Cove',-2,14,0,'small'), venueName:'Cove Park', description:'Unavailable demo record.', status:'expired', quality:0 }
 ];
+
+interface DatasetOpportunity {
+  id:string; kind:OpportunityKind; title:string; short_description:string; venue_name:string; neighborhood:string;
+  starts_at:string|null; ends_at:string|null; recurring_text:string|null; price_cents:number; status:OpportunityStatus;
+  tags:string[]; audience:string[]; group_style:string|null; accessibility:{notes?:string}|null; transport_notes:string|null;
+  source_name:string; source_url:string; is_demo_data:boolean;
+}
+
+const tagAliases:Record<string,string[]> = {
+  outdoor:['outdoors'], walking:['walk'], families:['family'], food_security:['food'], group_activity:['social'],
+  work_friendly:['study'], cafe:['coffee']
+};
+const groupStyle = (value:string|null,kind:OpportunityKind):SeedOpportunity['groupStyle'] => {
+  if(value==='solo_ok'||value==='small'||value==='medium'||value==='crowd') return value;
+  return kind==='place' ? 'solo_ok' : 'small';
+};
+const datasetQuality = (o:DatasetOpportunity) => Math.min(98,72+(o.source_url?8:0)+(o.short_description?6:0)+(o.venue_name?4:0)+(o.group_style?3:0)+(o.starts_at?3:0));
+const loadDataset = ():SeedOpportunity[] => {
+  const path = new URL('../../../opportunities.json',import.meta.url);
+  const rows = JSON.parse(readFileSync(path,'utf8')) as DatasetOpportunity[];
+  return rows.map(o => {
+    const tags = [...new Set(o.tags.flatMap(tag => [tag,...(tagAliases[tag]||[])]))];
+    const accessibility = o.accessibility?.notes ? [o.accessibility.notes] : ['Accessibility details not provided; check the source before traveling.'];
+    return {
+      id:o.id, kind:o.kind, title:o.title, description:o.short_description, venueName:o.venue_name, neighborhood:o.neighborhood,
+      startsAt:o.starts_at||undefined, endsAt:o.ends_at||undefined, recurringText:o.recurring_text||undefined, priceCents:o.price_cents,
+      status:o.status, tags, audience:o.audience, groupStyle:groupStyle(o.group_style,o.kind), accessibility,
+      transportNotes:o.transport_notes||'Check transit, parking, and access details before leaving.', sourceName:o.source_name,
+      sourceUrl:o.source_url, isDemoData:o.is_demo_data, quality:datasetQuality(o)
+    };
+  });
+};
+
+// Keep the deterministic hero records used by the demo while adding the researched
+// Stamford catalog from opportunities.json. Dataset IDs are UUIDs and remain stable.
+export const opportunities: SeedOpportunity[] = [...deterministicOpportunities,...loadDataset()];
 
 const names = ['Ava','Maya','Noah','Liam','Zoe','Nina','Eli','Mia','Leo','Iris','Owen','Sara','Ravi','Emma','Theo','Lena','Max','Jade','Aria','Sam','Kai','Anya','Ben','Cleo','Drew','Ella','Finn','Grace','Hugo','Ivy','Jon','Kira','Luca','Nora','Omar','Pia','Quinn','Rhea','Seth','Tara','Uma','Vik','Wren','Xander','Yara','Zain','Ari','Bea','Cole','Dina','Ezra'];
 export const personas: SeedPersona[] = names.map((firstName,i) => ({ id:`persona-${String(i+1).padStart(2,'0')}`, firstName, userType:i%3===1?'student':i%3===2?'new_resident':'resident', neighborhood:['Downtown','Harbor Point','Cove','Glenbrook','Springdale','Campus'][i%6], ageBand:'18_plus', interests:i%4===0?['outdoors','civic','useful']:i%4===1?['student','study','social']:i%4===2?['arts','food','social']:['outdoors','social'], groupSize:i%3===0?'small':i%3===1?'medium':'crowd', socialOptIn:true, transport:i%2?'walking':'transit', availability:['weekend','evening']}));

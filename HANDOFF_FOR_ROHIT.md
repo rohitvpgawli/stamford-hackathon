@@ -1,15 +1,17 @@
 # Handoff for Rohit — Dataset
 
-See `docs/DATA_STATUS_REPORT.md` for full detail. This is the short version: what's ready, what to do with it.
+See `DATA_STATUS_REPORT.md` for full detail. This is the short version: what's ready, what to do with it.
 
 ## Ready to use now
-`packages/seed-data/opportunities.json` — 49 real Stamford entries, already shaped to match your `opportunities` table schema from the PRD (section 8.5). Field names line up 1:1. Tested end-to-end.
+`opportunities.json` — 49 real Stamford entries. The Mango seed loader normalizes this source into the runtime `opportunities` table while preserving source URLs and provenance.
 
 ## If the data changes
-Edit `data/Mango_Stamford_Dataset.xlsx`, then run:
+Edit `Mango_Stamford_Dataset.xlsx`, then run:
 ```
-python3 scripts/convert_to_json.py data/Mango_Stamford_Dataset.xlsx packages/seed-data/opportunities.json
+python3 convert_to_json.py Mango_Stamford_Dataset.xlsx opportunities.json
 ```
+
+Restarting Mango (or constructing `MangoDb` for a local sync) upserts the 49 catalog rows into SQLite. The local database keeps the deterministic hero records as well, for 83 opportunities total.
 
 ## Photos — decision made
 Not doing photos. Couldn't reliably source safe, hotlinkable image URLs in time. Instead: every entry's `source_url` field is meant as a "learn more" click-through — tap a card, open the real source page. No image loading, no broken links, no risk of a fake photo on a real place.
