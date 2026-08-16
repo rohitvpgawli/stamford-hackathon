@@ -1,0 +1,24 @@
+# Cloudflare Tunnel for the Mango SMS API — runs the named tunnel as a managed
+# service so a stable public hostname survives process crashes and EC2 reboots.
+#
+# Install to /etc/systemd/system/cloudflared.service on the EC2 host, then:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now cloudflared
+#
+# `run` takes no tunnel name because the tunnel UUID is set in config.yml.
+
+[Unit]
+Description=Cloudflare Tunnel for Mango SMS API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/cloudflared tunnel --config /etc/cloudflared/config.yml run
+Restart=on-failure
+RestartSec=5
+User=root
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
