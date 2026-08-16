@@ -1,9 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Tab = "for-you" | "calendar" | "plans" | "explore";
 type FeedMode = "picks" | "all";
+type LinkedPlan = {
+  id: string;
+  title: string;
+  venue_name: string;
+  neighborhood: string;
+  starts_at: string | null;
+  joined_at: string;
+};
 
 const compactEvents = [
   { time: "TONIGHT · 7:30 PM", title: "Trivia at Third Place", place: "Third Place by Half Full", fit: "88%", kind: "trivia" },
@@ -40,6 +48,25 @@ export default function Home() {
   const [joinedCleanup, setJoinedCleanup] = useState(false);
   const [joinSheet, setJoinSheet] = useState(false);
   const [exploreType, setExploreType] = useState("All");
+  const [linkedPlans, setLinkedPlans] = useState<LinkedPlan[]>([]);
+  const [linkError, setLinkError] = useState("");
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const view = query.get("v");
+    if (view === "p") setTab("plans");
+    if (view === "c") setTab("calendar");
+    if (view) setShowHandoff(false);
+    const token = query.get("token");
+    if (!token) return;
+    fetch(`/api/mango?token=${encodeURIComponent(token)}`, { cache: "no-store" })
+      .then(async (response) => {
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.message || "That Mango link is no longer available.");
+        setLinkedPlans(Array.isArray(body.joinedPlans) ? body.joinedPlans : []);
+      })
+      .catch((error) => setLinkError(error instanceof Error ? error.message : "That Mango link is no longer available."));
+  }, []);
 
   const joinPlan = () => {
     setJoinedCleanup(true);
@@ -153,7 +180,21 @@ export default function Home() {
       {tab === "plans" && (
         <section className="screen plans-screen" id="plans" aria-label="Plans">
           <PageTitle eyebrow="YOU’RE NOT GOING ALONE" title="Your plans" copy="Everything you joined, plus the people making it better." />
-          {joinedCleanup ? (
+          {linkedPlans.length > 0 ? (
+            <div className="linked-plan-list">
+              {linkedPlans.map((plan) => (
+                <article className="plan-card primary-plan" key={plan.id}>
+                  <div className="plan-copy">
+                    <span className="status-pill">SAVED</span>
+                    <h2>{plan.title}</h2>
+                    <p>{formatPlanTime(plan.starts_at)}{plan.venue_name ? ` · ${plan.venue_name}` : ""}{plan.neighborhood ? ` · ${plan.neighborhood}` : ""}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : linkError ? (
+            <div className="empty-plan"><span>!</span><h2>This link needs a refresh.</h2><p>{linkError}</p><p>Text Mango again and I’ll send a fresh one.</p></div>
+          ) : joinedCleanup ? (
             <article className="plan-card primary-plan">
               <div className="plan-date"><span>AUG</span><b>15</b><small>1:30 PM</small></div>
               <div className="plan-copy"><span className="status-pill">CONFIRMED</span><h2>Mill River Community Cleanup</h2><p>Meet at the carousel entrance · 12 min away</p></div>
@@ -258,6 +299,18 @@ export default function Home() {
 
 function ModeToggle({ mode, setMode }: { mode: FeedMode; setMode: (mode: FeedMode) => void }) {
   return <div className="filter" aria-label="Event filter"><button onClick={() => setMode("picks")} className={mode === "picks" ? "filter-active" : ""}>✦ Mango Picks <span>4</span></button><button onClick={() => setMode("all")} className={mode === "all" ? "filter-active" : ""}>All Stamford</button></div>;
+}
+
+function formatPlanTime(value: string | null) {
+  if (!value) return "Anytime";
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/New_York",
+  }).format(new Date(value));
 }
 
 function PageTitle({ eyebrow, title, copy }: { eyebrow: string; title: string; copy: string }) {

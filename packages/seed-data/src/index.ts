@@ -11,12 +11,13 @@ const nextSunday = (()=>{ const day=new Date().getUTCDay(); return ((7-day)%7)||
 const base = (id:string,title:string,kind:OpportunityKind,tags:string[],neighborhood:string,days:number,hour:number,priceCents=0,groupStyle:'solo_ok'|'small'|'medium'|'crowd'='small'):SeedOpportunity => ({id,title,kind,tags,neighborhood,venueName: neighborhood+' public venue',description:'A friendly Mango demo opportunity in Stamford.',startsAt:iso(days,hour),endsAt:end(days,hour),priceCents,status:'active',audience:['all'],groupStyle,accessibility:['step-free entrance unknown'],transportNotes:'Public venue; check transit before leaving.',sourceName:'Mango demo seed',sourceUrl:'https://demo.mango.local/opportunities/'+id,isDemoData:true,quality:70});
 
 const deterministicOpportunities: SeedOpportunity[] = [
+  { id:'opp-stamford-ai-collective-hackathon', kind:'event', title:'Stamford AI Collective Hackathon', description:'An open-to-all AI hackathon at UConn Stamford, with Mango presenting.', venueName:'UConn Stamford', neighborhood:'Downtown', startsAt:'2026-08-19T22:00:00.000Z', priceCents:0, status:'active', tags:['ai','artificial_intelligence','hackathon','technology','learning','social','evening'], audience:['resident','student','new_resident','all'], groupStyle:'crowd', accessibility:['Accessibility details not provided; check with the venue before traveling.'], transportNotes:'UConn Stamford in Downtown; check transit and parking before leaving.', sourceName:'Stamford AI Collective', sourceUrl:'https://mango-io.vercel.app', isDemoData:true, quality:99 },
   { ...base('opp-soccer','Scalzi Park Pickup Soccer','event',['soccer','sports','fitness','outdoors','social','free'],'North Stamford',nextSunday,14,0,'medium'), venueName:'Scalzi Park', description:'A friendly co-ed pickup soccer game; bring water and a light and dark shirt.', audience:['resident','student','new_resident','all'], accessibility:['outdoor'], quality:92 },
   { ...base('opp-cleanup','Mill River Community Cleanup','volunteer',['civic','outdoors','useful','volunteer'],'Downtown',nextSaturday,13,0,'small'), venueName:'Mill River Park', description:'Help tidy a public stretch of Mill River with a small, welcoming crew.', audience:['resident','student','new_resident','all'], accessibility:['outdoor'], quality:98 },
-  { ...base('opp-study-walk','UConn Stamford Between-Classes Study Walk','campus',['student','outdoors','study','free'],'Campus',1,12,0,'small'), venueName:'UConn Stamford campus', description:'A flexible campus-adjacent walk and study reset for students between classes.', audience:['student'], recurringText:'Flexible 45-minute drop-in', quality:96 },
   { ...base('opp-yoga','Harbor Point Outdoor Yoga','event',['outdoors','wellness','social'],'Harbor Point',nextSaturday,10,500,'small'), venueName:'Harbor Point Commons', description:'Low-key outdoor yoga with room to chat after class.', quality:90 },
   { ...base('opp-trivia','Downtown Trivia Night','event',['social','food','trivia','evening'],'Downtown',2,19,1200,'medium'), venueName:'The Stamford Table', description:'Team trivia, snacks, and an easy way to meet a crowd.', quality:86 },
   { ...base('opp-library','Ferguson Library Community Workshop','event',['civic','learning','accessible','free'],'Downtown',4,18,0,'small'), venueName:'Ferguson Library', description:'A practical community workshop in an accessible public library room.', accessibility:['step-free entrance','accessible restroom'], quality:94 },
+  { ...base('opp-book-club','Ferguson Library Book Club','event',['book_club','reading','learning','social','free'],'Downtown',4,18,0,'small'), venueName:'Ferguson Library', description:'A clearly labeled Mango demo book discussion for readers who want a welcoming group.', accessibility:['step-free entrance','accessible restroom'], quality:95 },
   { ...base('opp-cove-walk','Cove Island Sunset Walk','place',['outdoors','walk','free'],'Cove',2,18,0,'solo_ok'), venueName:'Cove Island Park', description:'A public waterfront walk for a little fresh air and a calm reset.', quality:82 },
   { ...base('opp-glenbrook-market','Glenbrook Makers Market','event',['food','arts','social'],'Glenbrook',5,11,0,'crowd'), venueName:'Glenbrook Community Center', description:'Browse local makers and food stalls in a relaxed neighborhood market.', quality:80 },
   { ...base('opp-harbor-volunteer','Harbor Point Food Pantry Shift','volunteer',['civic','useful','indoors'],'Harbor Point',6,14,0,'small'), venueName:'Harbor Point Pantry', description:'A two-hour volunteer shift sorting community food donations.', quality:89 },
@@ -38,9 +39,7 @@ const deterministicOpportunities: SeedOpportunity[] = [
   { ...base('opp-food-market','Downtown Food Hall Crawl','event',['food','social'],'Downtown',2,17,1800,'medium'), venueName:'Downtown Food Hall', description:'Try a few stalls with a flexible group and no reservation required.', quality:77 },
   { ...base('opp-food-potluck','Glenbrook Neighborhood Potluck','event',['food','social','community'],'Glenbrook',5,18,0,'medium'), venueName:'Glenbrook Community Center', description:'A public community potluck with vegetarian options.', quality:86 },
   { ...base('opp-food-board','Springdale Board Game Cafe','place',['food','social','games'],'Springdale',6,19,1400,'small'), venueName:'Springdale game cafe', description:'A cozy public cafe with drop-in games and beginner tables.', quality:78 },
-  { ...base('opp-tonight','Ferguson Library Evening Reading Room','place',['study','free','quiet'],'Downtown',0,18,0,'solo_ok'), venueName:'Ferguson Library', description:'A calm, free public place for a focused evening reset.', accessibility:['step-free entrance','accessible restroom'], quality:77 },
   { ...base('opp-park','Mill River Park Loop','place',['outdoors','free','walk'],'Downtown',1,10,0,'solo_ok'), venueName:'Mill River Park', description:'A flexible public park loop for a walk, reset, or quick break.', quality:73 },
-  { ...base('opp-library-place','Ferguson Library Reading Room','place',['study','free','accessible'],'Downtown',1,13,0,'solo_ok'), venueName:'Ferguson Library', description:'A quiet, accessible public reading room for focused time.', accessibility:['step-free entrance','accessible restroom'], quality:72 },
   { ...base('opp-gallery-place','Cove Pop-up Gallery','place',['arts','free'],'Cove',3,14,0,'solo_ok'), venueName:'Cove Gallery', description:'A compact public gallery pop-up with rotating local work.', quality:71 },
   { ...base('opp-unavailable-canceled','Canceled Harbor Cleanup','volunteer',['civic','outdoors'],'Harbor Point',2,13,0,'small'), venueName:'Harbor Point', description:'Unavailable demo record.', status:'canceled', quality:0 },
   { ...base('opp-unavailable-sold','Sold Out Downtown Concert','event',['arts','social'],'Downtown',3,20,2500,'crowd'), venueName:'Downtown Theater', description:'Unavailable demo record.', status:'sold_out', quality:0 },
@@ -67,7 +66,10 @@ const loadDataset = ():SeedOpportunity[] => {
   const path = new URL('../../../opportunities.json',import.meta.url);
   const rows = JSON.parse(readFileSync(path,'utf8')) as DatasetOpportunity[];
   return rows.map(o => {
-    const tags = [...new Set(o.tags.flatMap(tag => [tag,...(tagAliases[tag]||[])]))];
+    const tags = [...new Set([
+      ...o.tags.flatMap(tag => [tag,...(tagAliases[tag]||[])]),
+      ...(/library/i.test(`${o.title} ${o.venue_name}`) ? ['library','reading','study'] : [])
+    ])];
     const accessibility = o.accessibility?.notes ? [o.accessibility.notes] : ['Accessibility details not provided; check the source before traveling.'];
     return {
       id:o.id, kind:o.kind, title:o.title, description:o.short_description, venueName:o.venue_name, neighborhood:o.neighborhood,
@@ -79,18 +81,35 @@ const loadDataset = ():SeedOpportunity[] => {
   });
 };
 
-// Keep the deterministic hero records used by the demo while adding the researched
-// Stamford catalog from opportunities.json. Dataset IDs are UUIDs and remain stable.
-export const opportunities: SeedOpportunity[] = [...deterministicOpportunities,...loadDataset()];
+// Keep deterministic timing for hero records, merge in matching researched
+// provenance, and include the rest of the researched catalog exactly once.
+const opportunityKey = (o:Pick<SeedOpportunity,'title'|'venueName'>) => `${o.title.trim().toLowerCase()}\u0000${o.venueName.trim().toLowerCase()}`;
+const researchedOpportunities=loadDataset();
+const researchedByKey=new Map(researchedOpportunities.map(o=>[opportunityKey(o),o]));
+const mergedDeterministicOpportunities=deterministicOpportunities.map(o=>{
+  const researched=researchedByKey.get(opportunityKey(o));
+  if(!researched) return o;
+  return {...o,tags:[...new Set([...o.tags,...researched.tags])],sourceName:researched.sourceName,sourceUrl:researched.sourceUrl,quality:Math.max(o.quality,researched.quality)};
+});
+const deterministicKeys=new Set(deterministicOpportunities.map(opportunityKey));
+const curatedDemoEventIds=new Set([
+  'opp-stamford-ai-collective-hackathon',
+  'opp-soccer','opp-cleanup','opp-yoga','opp-trivia','opp-book-club','opp-library',
+  'opp-harbor-volunteer','opp-springdale-garden','opp-campus-club','opp-campus-art',
+  'opp-arts-film','opp-food-potluck'
+]);
+const mergedOpportunities=[...mergedDeterministicOpportunities,...researchedOpportunities.filter(o=>!deterministicKeys.has(opportunityKey(o)))];
+export const opportunities: SeedOpportunity[] = mergedOpportunities.map(o=>o.kind!=='place'&&o.status==='active'&&!curatedDemoEventIds.has(o.id)?{...o,status:'expired'}:o);
 
 const names = ['Ava','Maya','Noah','Liam','Zoe','Nina','Eli','Mia','Leo','Iris','Owen','Sara','Ravi','Emma','Theo','Lena','Max','Jade','Aria','Sam','Kai','Anya','Ben','Cleo','Drew','Ella','Finn','Grace','Hugo','Ivy','Jon','Kira','Luca','Nora','Omar','Pia','Quinn','Rhea','Seth','Tara','Uma','Vik','Wren','Xander','Yara','Zain','Ari','Bea','Cole','Dina','Ezra'];
 export const personas: SeedPersona[] = names.map((firstName,i) => ({ id:`persona-${String(i+1).padStart(2,'0')}`, firstName, userType:i%3===1?'student':i%3===2?'new_resident':'resident', neighborhood:['Downtown','Harbor Point','Cove','Glenbrook','Springdale','Campus'][i%6], ageBand:'18_plus', interests:i%4===0?['outdoors','civic','useful']:i%4===1?['student','study','social']:i%4===2?['arts','food','social']:['outdoors','social'], groupSize:i%3===0?'small':i%3===1?'medium':'crowd', socialOptIn:true, transport:i%2?'walking':'transit', availability:['weekend','evening']}));
 
 export const copy = {
-  firstGreeting:"Hey 👋 I’m Mango—your slightly over-opinionated guide to Stamford. What should I call you?",
+  firstGreeting:"Hey, I'm Mango, your slightly over-opinionated guide to Stamford. What should I call you?",
   returningGreeting:(name:string)=>`Hey ${name} 👋 What should we find in Stamford today?`,
-  nameSaved:(name:string)=>`Nice to meet you, ${name}. What are we feeling—something fun, somewhere to explore, meeting people, doing something useful, or surprise me?`,
+  nameSaved:(name:string)=>`Nice to meet you, ${name}. What are we feeling: something fun, somewhere to explore, meeting people, doing something useful, or surprise me?`,
   warning:'Tiny heads-up: I’m on hackathon-sized brainpower today 😄 We’ve got a couple messages left.',
+  socialPrivacy:'Nice try. I protect their privacy. Once you walk in, shout "Mango!" and you will figure it out.',
   cutoff:'You’ve officially talked my ear off 😄 I’m capped for the demo right now. For more Mango, email support@trillium.one and we’ll increase your limit.',
   appUpsell:(url:string)=>`I could keep throwing options at you, but that’s how Saturday becomes 25 tabs and no plan 😄 I narrowed down a better-fit list in Mango: ${url}`,
   joined:(title:string,url:string)=>`You’re in 🥭 I added ${title} to your Mango plan. See your group and Stamford week: ${url}`,
@@ -101,6 +120,6 @@ export const copy = {
   safety:'I’m sorry you’re dealing with this. If there is immediate danger, call 911. In the U.S., call or text 988 for crisis support. Mango can’t provide emergency care.',
   agentError:'Mango tripped over a mango 🥭 Try that again in a minute?',
   dbError:'Mango lost the Stamford map for a second. Try again shortly.',
-  noResult:'I couldn’t find a solid fit without stretching your constraints. Want to relax the time, distance, or budget a little?',
+  noResult:'Give me one more clue: active, social, creative, outdoorsy, or anything works?',
   linkExpired:'That Mango link expired for privacy. Text Mango again and I’ll make you a fresh one.'
 };

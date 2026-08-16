@@ -5,11 +5,19 @@ import { Orchestrator } from './orchestrator.js';
 import { verifyAppToken } from './token.js';
 import type { CanonicalInbound } from '@mango/contracts';
 import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 
 export interface AppRuntime { app:FastifyInstance; db:MangoDb; orchestrator:Orchestrator; simulator:AndroidLocalSimAdapter; drain:()=>Promise<number>; stopWorker:()=>void; }
-export function buildApp(options:{db?:MangoDb; webhookSecret?:string; adminToken?:string; appBaseUrl?:string; linkSecret?:string}={}):AppRuntime {
+function loadTurnLimitBypassPhones(path=process.env.PHONE_WHITELIST_PATH||'./data/phone-whitelist.json') {
+  try {
+    const parsed=JSON.parse(readFileSync(path,'utf8')) as {allowed?:unknown};
+    if(!Array.isArray(parsed.allowed)) return [];
+    return parsed.allowed.flatMap((entry:any)=>entry?.enabled===true && typeof entry.phone==='string'?[entry.phone]:[]);
+  } catch { return []; }
+}
+export function buildApp(options:{db?:MangoDb; webhookSecret?:string; adminToken?:string; appBaseUrl?:string; linkSecret?:string; turnLimitBypassPhones?:string[]}={}):AppRuntime {
   const db=options.db||new MangoDb(process.env.DATABASE_URL||':memory:'); const simulator=new AndroidLocalSimAdapter(); const adapter=process.env.ANDROID_GATEWAY_BASE_URL?new AndroidHttpAdapter(process.env.ANDROID_GATEWAY_BASE_URL,process.env.ANDROID_GATEWAY_USERNAME||'',process.env.ANDROID_GATEWAY_PASSWORD||'',process.env.ANDROID_GATEWAY_DEVICE_ID||undefined,process.env.ANDROID_GATEWAY_SIM_NUMBER?Number(process.env.ANDROID_GATEWAY_SIM_NUMBER):undefined):simulator;
-  const orchestrator=new Orchestrator(db,{maxTurns:Number(process.env.MAX_USER_TURNS||12),warningAt:Number(process.env.TURN_WARNING_AT||10),appBaseUrl:options.appBaseUrl||process.env.APP_DEEP_LINK_BASE_URL||'http://localhost:3000',linkSecret:options.linkSecret||process.env.DEEP_LINK_SIGNING_SECRET||'demo-deep-link-secret'});
+  const orchestrator=new Orchestrator(db,{maxTurns:Number(process.env.MAX_USER_TURNS||12),warningAt:Number(process.env.TURN_WARNING_AT||10),appBaseUrl:options.appBaseUrl||process.env.APP_DEEP_LINK_BASE_URL||'https://mango-io.vercel.app',linkSecret:options.linkSecret||process.env.DEEP_LINK_SIGNING_SECRET||'demo-deep-link-secret',turnLimitBypassPhones:options.turnLimitBypassPhones??loadTurnLimitBypassPhones()});
   const app=Fastify({logger:process.env.NODE_ENV==='test'?false:{redact:{paths:['req.url','req.headers.authorization','req.headers.x-mango-webhook-secret','req.headers.x-admin-token'],censor:'[Redacted]'}},bodyLimit:32768,genReqId:()=>randomUUID()}); const webhookSecret=options.webhookSecret??process.env.WEBHOOK_SHARED_SECRET??'demo-webhook-secret'; const adminToken=options.adminToken??process.env.ADMIN_TOKEN??'demo-admin-token';
   app.setErrorHandler((error,req,reply)=>{ req.log.error({err:error,request_id:req.id},'request failed'); reply.code((error as any).statusCode&&Number((error as any).statusCode)<500?Number((error as any).statusCode):500).send({error:'internal_error',message:'Mango hit a snag. Try again shortly.',request_id:req.id}); });
   // Tests get a deterministic drain hook; production remains fire-and-forget after durable enqueue.
