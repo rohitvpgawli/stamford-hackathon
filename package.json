@@ -2,6 +2,7 @@
   "name": "site-creator-vinext-starter",
   "version": "0.1.0",
   "private": true,
+  "workspaces": ["apps/*", "packages/*"],
   "engines": {
     "node": ">=22.13.0"
   },
@@ -11,7 +12,11 @@
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "mango:build": "npm run build --workspace @mango/contracts && npm run build --workspace @mango/seed-data && npm run build --workspace @mango/sms-api && npm run build --workspace @mango/mango-web",
+    "mango:typecheck": "npm run build --workspace @mango/contracts && npm run build --workspace @mango/seed-data && npm run typecheck --workspace @mango/contracts && npm run typecheck --workspace @mango/seed-data && npm run typecheck --workspace @mango/sms-api && npm run typecheck --workspace @mango/mango-web",
+    "mango:test": "npm run build --workspace @mango/contracts && npm run build --workspace @mango/seed-data && npm run test --workspace @mango/sms-api",
+    "mango:load-test": "npm run load-test --workspace @mango/sms-api"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

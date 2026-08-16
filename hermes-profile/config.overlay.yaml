@@ -1,0 +1,17 @@
+# Non-secret settings applied to the isolated `mango` Hermes profile.
+agent:
+  max_turns: 4
+memory:
+  # Mango's SQLite profile facts are authoritative and sanitized before each call.
+  memory_enabled: false
+  user_profile_enabled: false
+platform_toolsets:
+  # The orchestrator supplies grounded candidates; Hermes receives no executable tools.
+  api_server: []
+gateway:
+  api_server:
+    enabled: true
+    host: 127.0.0.1
+    port: 8643
+    model_name: mango
+    max_concurrent_runs: 10

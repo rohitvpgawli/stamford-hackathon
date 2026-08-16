@@ -1,0 +1,4 @@
+'use client';
+import {useState} from 'react';
+const categories=['Outdoors','Civic / volunteer','Student','Arts / culture','Food / social','Places'];
+export default function Explore(){const [active,setActive]=useState('Outdoors');return <><div className="eyebrow">Explore</div><h1>Find your Stamford</h1><p className="meta">Text Mango for one strong pick, or browse here when you want more.</p><div className="chips">{categories.map(c=><button className="chip" onClick={()=>setActive(c)} key={c}>{c}</button>)}</div><section className="grid"><article className="card"><div className="eyebrow">{active}</div><h2>Mill River Community Cleanup</h2><p>Saturday · Downtown · Free</p><p className="meta">A demo listing matched to your profile.</p></article><article className="card"><div className="eyebrow">{active}</div><h2>Ferguson Library Workshop</h2><p>Thursday · Downtown · Free</p></article></section></>}
