@@ -16,7 +16,7 @@ The hackathon build uses an Android local-SIM SMS gateway as the hero interface,
 
 - [Data status report](DATA_STATUS_REPORT.md)
 - [Handoff notes for Rohit](HANDOFF_FOR_ROHIT.md)
-- Researched catalog: `opportunities.json` (49 real Stamford entries with source provenance), regenerated from `Mango_Stamford_Dataset.xlsx` via `python3 convert_to_json.py Mango_Stamford_Dataset.xlsx opportunities.json`
+- Researched catalog: `opportunities.json` (65 real Stamford entries with source provenance), regenerated from `Mango_Stamford_Dataset.xlsx` via `python3 convert_to_json.py Mango_Stamford_Dataset.xlsx opportunities.json`
 - Demo seed (`packages/seed-data`): 4 deterministic hero records, 3 unavailable-state records for failure paths, and 12 hand-curated personas — kept deliberately small so every demo claim is explainable
 
 ## Social matching
