@@ -1,0 +1,18 @@
+# Named Cloudflare Tunnel for the Mango SMS API.
+#
+# Copy to /etc/cloudflared/config.yml on the EC2 host and replace every <...>
+# placeholder with the real value from `cloudflared tunnel create`.
+#
+# Only the Mango SMS API (127.0.0.1:3001) is exposed through this tunnel.
+# Hermes (127.0.0.1:8643) is deliberately NOT listed here and stays private
+# on loopback — the tunnel can never reach it.
+
+tunnel: <TUNNEL-UUID>
+credentials-file: /etc/cloudflared/<TUNNEL-UUID>.json
+
+# Cloudflare edge -> this tunnel -> local Mango API.
+ingress:
+  - hostname: <sms.yourdomain.com>
+    service: http://127.0.0.1:3001
+  # Any hostname/path that is not the one above is refused at the tunnel.
+  - service: http_status:404

@@ -1,17 +1,24 @@
 import { readFileSync } from 'node:fs';
 import type { OpportunityKind, OpportunityStatus } from '@mango/contracts';
 
-export interface SeedOpportunity { id:string; kind:OpportunityKind; title:string; description:string; venueName:string; neighborhood:string; startsAt?:string; endsAt?:string; recurringText?:string; priceCents:number; status:OpportunityStatus; tags:string[]; audience:string[]; groupStyle:'solo_ok'|'small'|'medium'|'crowd'; accessibility:string[]; transportNotes:string; sourceName:string; sourceUrl:string; isDemoData:boolean; quality:number; }
+export interface SeedOpportunity { id:string; kind:OpportunityKind; title:string; description:string; venueName:string; neighborhood:string; startsAt?:string; endsAt?:string; recurringText?:string; priceCents:number; status:OpportunityStatus; tags:string[]; audience:string[]; groupStyle:'solo_ok'|'small'|'medium'|'crowd'; accessibility:string[]; transportNotes:string; sourceName:string; sourceUrl:string; isDemoData:boolean; quality:number; eventPageUrl:string; }
 export interface SeedPersona { id:string; firstName:string; userType:'resident'|'student'|'new_resident'; neighborhood:string; ageBand:string; interests:string[]; groupSize:'small'|'medium'|'crowd'; socialOptIn:boolean; transport:string; availability:string[]; }
+
+// Public base for the mobile event pages Mango texts on JOIN. Each opportunity's
+// canonical page is EVENT_PAGE_BASE + id (mirrors the event_page_url column in
+// opportunities.json). Kept here so deterministic records stay in sync with the catalog.
+export const EVENT_PAGE_BASE = 'https://mango-io.vercel.app/events/';
 
 const iso = (days:number, hour:number, minute=0) => { const d = new Date(); d.setUTCHours(hour, minute, 0, 0); d.setUTCDate(d.getUTCDate()+days); return d.toISOString(); };
 const end = (days:number, hour:number, duration=2) => { const d = new Date(iso(days,hour)); d.setUTCHours(d.getUTCHours()+duration); return d.toISOString(); };
 const nextSaturday = (()=>{ const day=new Date().getUTCDay(); return ((6-day+7)%7)||7; })();
 const nextSunday = (()=>{ const day=new Date().getUTCDay(); return ((7-day)%7)||7; })();
-const base = (id:string,title:string,kind:OpportunityKind,tags:string[],neighborhood:string,days:number,hour:number,priceCents=0,groupStyle:'solo_ok'|'small'|'medium'|'crowd'='small'):SeedOpportunity => ({id,title,kind,tags,neighborhood,venueName: neighborhood+' public venue',description:'A friendly Mango demo opportunity in Stamford.',startsAt:iso(days,hour),endsAt:end(days,hour),priceCents,status:'active',audience:['all'],groupStyle,accessibility:['step-free entrance unknown'],transportNotes:'Public venue; check transit before leaving.',sourceName:'Mango demo seed',sourceUrl:'https://demo.mango.local/opportunities/'+id,isDemoData:true,quality:70});
+const base = (id:string,title:string,kind:OpportunityKind,tags:string[],neighborhood:string,days:number,hour:number,priceCents=0,groupStyle:'solo_ok'|'small'|'medium'|'crowd'='small'):SeedOpportunity => ({id,title,kind,tags,neighborhood,venueName: neighborhood+' public venue',description:'A friendly Mango demo opportunity in Stamford.',startsAt:iso(days,hour),endsAt:end(days,hour),priceCents,status:'active',audience:['all'],groupStyle,accessibility:['step-free entrance unknown'],transportNotes:'Public venue; check transit before leaving.',sourceName:'Mango demo seed',sourceUrl:'https://demo.mango.local/opportunities/'+id,isDemoData:true,quality:70,eventPageUrl:EVENT_PAGE_BASE+id});
 
+// Deterministic hero records keep reliable demo timing. Matching researched
+// records are merged below so source provenance is preserved without duplicates.
 const deterministicOpportunities: SeedOpportunity[] = [
-  { id:'opp-stamford-ai-collective-hackathon', kind:'event', title:'Stamford AI Collective Hackathon', description:'An open-to-all AI hackathon at UConn Stamford, with Mango presenting.', venueName:'UConn Stamford', neighborhood:'Downtown', startsAt:'2026-08-19T22:00:00.000Z', priceCents:0, status:'active', tags:['ai','artificial_intelligence','hackathon','technology','learning','social','evening'], audience:['resident','student','new_resident','all'], groupStyle:'crowd', accessibility:['Accessibility details not provided; check with the venue before traveling.'], transportNotes:'UConn Stamford in Downtown; check transit and parking before leaving.', sourceName:'Stamford AI Collective', sourceUrl:'https://mango-io.vercel.app', isDemoData:true, quality:99 },
+  { id:'opp-stamford-ai-collective-hackathon', kind:'event', title:'Stamford AI Collective Hackathon', description:'An open-to-all AI hackathon at UConn Stamford, with Mango presenting.', venueName:'UConn Stamford', neighborhood:'Downtown', startsAt:'2026-08-19T22:00:00.000Z', priceCents:0, status:'active', tags:['ai','artificial_intelligence','hackathon','technology','learning','social','evening'], audience:['resident','student','new_resident','all'], groupStyle:'crowd', accessibility:['Accessibility details not provided; check with the venue before traveling.'], transportNotes:'UConn Stamford in Downtown; check transit and parking before leaving.', sourceName:'Stamford AI Collective', sourceUrl:'https://mango-io.vercel.app', isDemoData:true, quality:99, eventPageUrl:EVENT_PAGE_BASE+'opp-stamford-ai-collective-hackathon' },
   { ...base('opp-soccer','Scalzi Park Pickup Soccer','event',['soccer','sports','fitness','outdoors','social','free'],'North Stamford',nextSunday,14,0,'medium'), venueName:'Scalzi Park', description:'A friendly co-ed pickup soccer game; bring water and a light and dark shirt.', audience:['resident','student','new_resident','all'], accessibility:['outdoor'], quality:92 },
   { ...base('opp-cleanup','Mill River Community Cleanup','volunteer',['civic','outdoors','useful','volunteer'],'Downtown',nextSaturday,13,0,'small'), venueName:'Mill River Park', description:'Help tidy a public stretch of Mill River with a small, welcoming crew.', audience:['resident','student','new_resident','all'], accessibility:['outdoor'], quality:98 },
   { ...base('opp-yoga','Harbor Point Outdoor Yoga','event',['outdoors','wellness','social'],'Harbor Point',nextSaturday,10,500,'small'), venueName:'Harbor Point Commons', description:'Low-key outdoor yoga with room to chat after class.', quality:90 },
@@ -50,7 +57,7 @@ interface DatasetOpportunity {
   id:string; kind:OpportunityKind; title:string; short_description:string; venue_name:string; neighborhood:string;
   starts_at:string|null; ends_at:string|null; recurring_text:string|null; price_cents:number; status:OpportunityStatus;
   tags:string[]; audience:string[]; group_style:string|null; accessibility:{notes?:string}|null; transport_notes:string|null;
-  source_name:string; source_url:string; is_demo_data:boolean;
+  source_name:string; source_url:string; is_demo_data:boolean; event_page_url?:string;
 }
 
 const tagAliases:Record<string,string[]> = {
@@ -76,7 +83,8 @@ const loadDataset = ():SeedOpportunity[] => {
       startsAt:o.starts_at||undefined, endsAt:o.ends_at||undefined, recurringText:o.recurring_text||undefined, priceCents:o.price_cents,
       status:o.status, tags, audience:o.audience, groupStyle:groupStyle(o.group_style,o.kind), accessibility,
       transportNotes:o.transport_notes||'Check transit, parking, and access details before leaving.', sourceName:o.source_name,
-      sourceUrl:o.source_url, isDemoData:o.is_demo_data, quality:datasetQuality(o)
+      sourceUrl:o.source_url, isDemoData:o.is_demo_data, quality:datasetQuality(o),
+      eventPageUrl:o.event_page_url||EVENT_PAGE_BASE+o.id
     };
   });
 };
@@ -89,20 +97,65 @@ const researchedByKey=new Map(researchedOpportunities.map(o=>[opportunityKey(o),
 const mergedDeterministicOpportunities=deterministicOpportunities.map(o=>{
   const researched=researchedByKey.get(opportunityKey(o));
   if(!researched) return o;
-  return {...o,tags:[...new Set([...o.tags,...researched.tags])],sourceName:researched.sourceName,sourceUrl:researched.sourceUrl,quality:Math.max(o.quality,researched.quality)};
+  return {...o,tags:[...new Set([...o.tags,...researched.tags])],sourceName:researched.sourceName,sourceUrl:researched.sourceUrl,eventPageUrl:researched.eventPageUrl,quality:Math.max(o.quality,researched.quality)};
 });
 const deterministicKeys=new Set(deterministicOpportunities.map(opportunityKey));
-const curatedDemoEventIds=new Set([
+export const curatedDemoEventIds=new Set([
   'opp-stamford-ai-collective-hackathon',
   'opp-soccer','opp-cleanup','opp-yoga','opp-trivia','opp-book-club','opp-library',
   'opp-harbor-volunteer','opp-springdale-garden','opp-campus-club','opp-campus-art',
-  'opp-arts-film','opp-food-potluck'
+  'opp-arts-film','opp-food-potluck',
+  'b2dd4e9d-88b2-4573-8c05-c55238dcaa53',
+  'f82ea9c1-033e-467d-96e5-8994067b6caa',
+  '0e348830-5efd-4cd0-b145-b7bee43b9585',
+  '44d3851b-883e-46d9-bae5-8c3186817c7b',
+  '6e305296-fdb8-4912-b59f-89c70ef4d10f',
+  'c46c2db7-9196-4c0c-9a65-07a501f1f62f',
+  '7ff28c53-20a0-4ed3-bac9-bc7adf312cf1',
+  '6f1957e9-d0fb-46bb-9e1b-fff6fe1484ec',
+  '80bf7f07-bfb3-4d98-956f-6c0a63db5ae0',
+  '4c99bacb-a305-4ee4-b0b0-a218b1121bbf',
+  'b49e9f37-a7a6-414d-95f6-b035a01354d0',
+  'e72f8aa5-0852-45a1-bdd6-f5aeaddb4575',
+  '27f5e7c9-d52f-4665-8b49-5c87d65ad02d',
+  '20b2ebcf-8462-4bad-8dad-7f473440b29f',
+  '3841ebf4-33b5-4da2-9bd4-683de523be7a',
+  '7af80863-70b9-48d4-8beb-a6325d6907a5',
+  'acf2abbc-e396-404d-8119-fc7b0ef6b707',
+  'aac46ebc-9156-4683-8b97-4fed197eea72',
+  'a6893a63-7f36-45df-ad38-662e8b8199cd',
+  'aa665e9b-04d6-4df8-8c8c-1e3b2a0832c5',
+  'f005183d-851f-4bb1-97e5-91399acbb7ec',
+  'bb1991c7-9dce-4843-9168-d491ac334209',
+  '2fa2419d-41d3-40e5-a7f9-1ddd719b9e22',
+  '24201f65-7d92-47b4-90c2-750e68b24f2b',
+  'a878263e-a588-4780-9243-dc9af10eb11e',
+  '325a9d83-de18-46af-8ebb-384ae0412ce2',
+  '2e97b008-05a0-4049-8fe2-c3f6f8af1df7',
+  '422e25d1-40e6-4393-ab7e-3969bb59cd39',
+  '2e6c1ecd-5184-4450-9464-f30af43d9a93',
+  '34ae2d4d-328c-4039-97aa-7d7d2ef4bdc3'
 ]);
 const mergedOpportunities=[...mergedDeterministicOpportunities,...researchedOpportunities.filter(o=>!deterministicKeys.has(opportunityKey(o)))];
 export const opportunities: SeedOpportunity[] = mergedOpportunities.map(o=>o.kind!=='place'&&o.status==='active'&&!curatedDemoEventIds.has(o.id)?{...o,status:'expired'}:o);
 
-const names = ['Ava','Maya','Noah','Liam','Zoe','Nina','Eli','Mia','Leo','Iris','Owen','Sara','Ravi','Emma','Theo','Lena','Max','Jade','Aria','Sam','Kai','Anya','Ben','Cleo','Drew','Ella','Finn','Grace','Hugo','Ivy','Jon','Kira','Luca','Nora','Omar','Pia','Quinn','Rhea','Seth','Tara','Uma','Vik','Wren','Xander','Yara','Zain','Ari','Bea','Cole','Dina','Ezra'];
-export const personas: SeedPersona[] = names.map((firstName,i) => ({ id:`persona-${String(i+1).padStart(2,'0')}`, firstName, userType:i%3===1?'student':i%3===2?'new_resident':'resident', neighborhood:['Downtown','Harbor Point','Cove','Glenbrook','Springdale','Campus'][i%6], ageBand:'18_plus', interests:i%4===0?['outdoors','civic','useful']:i%4===1?['student','study','social']:i%4===2?['arts','food','social']:['outdoors','social'], groupSize:i%3===0?'small':i%3===1?'medium':'crowd', socialOptIn:true, transport:i%2?'walking':'transit', availability:['weekend','evening']}));
+// Hand-curated demo personas. Small on purpose: every match shown in the demo
+// must be explainable from a persona's interests, and two opt-outs keep the
+// social gate honest. Each hero opportunity has 2-3 plausible matches.
+export const personas: SeedPersona[] = [
+  { id:'persona-01', firstName:'Maya', userType:'resident', neighborhood:'Downtown', ageBand:'18_plus', interests:['outdoors','civic','volunteer','useful'], groupSize:'small', socialOptIn:true, transport:'walking', availability:['weekend','morning'] },
+  { id:'persona-02', firstName:'Leo', userType:'student', neighborhood:'Campus', ageBand:'18_plus', interests:['student','study','social'], groupSize:'small', socialOptIn:true, transport:'walking', availability:['weekday','afternoon'] },
+  { id:'persona-03', firstName:'Ava', userType:'resident', neighborhood:'Cove', ageBand:'18_plus', interests:['outdoors','fitness','social'], groupSize:'medium', socialOptIn:true, transport:'transit', availability:['weekend'] },
+  { id:'persona-04', firstName:'Noah', userType:'new_resident', neighborhood:'Harbor Point', ageBand:'18_plus', interests:['food','social','evening'], groupSize:'medium', socialOptIn:true, transport:'walking', availability:['evening'] },
+  { id:'persona-05', firstName:'Iris', userType:'resident', neighborhood:'Springdale', ageBand:'18_plus', interests:['arts','creative','social'], groupSize:'small', socialOptIn:true, transport:'transit', availability:['weekend','evening'] },
+  { id:'persona-06', firstName:'Ravi', userType:'student', neighborhood:'Campus', ageBand:'18_plus', interests:['soccer','sports','fitness','outdoors'], groupSize:'medium', socialOptIn:true, transport:'transit', availability:['weekend','afternoon'] },
+  { id:'persona-07', firstName:'Zoe', userType:'resident', neighborhood:'Glenbrook', ageBand:'18_plus', interests:['civic','useful','community','food'], groupSize:'small', socialOptIn:true, transport:'walking', availability:['weekend','morning'] },
+  { id:'persona-08', firstName:'Owen', userType:'resident', neighborhood:'Downtown', ageBand:'18_plus', interests:['trivia','social','food','evening'], groupSize:'medium', socialOptIn:true, transport:'walking', availability:['evening'] },
+  { id:'persona-09', firstName:'Nina', userType:'new_resident', neighborhood:'Harbor Point', ageBand:'18_plus', interests:['wellness','outdoors','social'], groupSize:'small', socialOptIn:true, transport:'walking', availability:['weekend','morning'] },
+  { id:'persona-10', firstName:'Theo', userType:'resident', neighborhood:'Cove', ageBand:'18_plus', interests:['walk','nature','outdoors'], groupSize:'small', socialOptIn:false, transport:'walking', availability:['weekend'] },
+  { id:'persona-11', firstName:'Sara', userType:'student', neighborhood:'Campus', ageBand:'18_plus', interests:['study','arts','quiet'], groupSize:'small', socialOptIn:false, transport:'transit', availability:['weekday'] },
+  { id:'persona-12', firstName:'Emma', userType:'resident', neighborhood:'Springdale', ageBand:'18_plus', interests:['games','food','social'], groupSize:'small', socialOptIn:true, transport:'transit', availability:['evening','weekend'] }
+];
 
 export const copy = {
   firstGreeting:"Hey, I'm Mango, your slightly over-opinionated guide to Stamford. What should I call you?",
@@ -112,7 +165,10 @@ export const copy = {
   socialPrivacy:'Nice try. I protect their privacy. Once you walk in, shout "Mango!" and you will figure it out.',
   cutoff:'You’ve officially talked my ear off 😄 I’m capped for the demo right now. For more Mango, email support@trillium.one and we’ll increase your limit.',
   appUpsell:(url:string)=>`I could keep throwing options at you, but that’s how Saturday becomes 25 tabs and no plan 😄 I narrowed down a better-fit list in Mango: ${url}`,
-  joined:(title:string,url:string)=>`You’re in 🥭 I added ${title} to your Mango plan. See your group and Stamford week: ${url}`,
+  joined:(title:string,url:string,group='')=>`You’re in 🥭 I added ${title} to your Mango plan.${group} See your group and Stamford week: ${url}`,
+  groupPreview:(names:string[],extra:number)=>names.length?` You’ll be with ${names.join(', ')}${extra>0?` +${extra} more`:''} (demo matches—meet in public).`:'',
+  socialSignal:(count:number,tag:string)=>` ${count} Mango ${count===1?'member':'members'} also into ${tag} ${count===1?'has':'have'} this on their radar.`,
+  alreadyJoined:(count:number)=>` ${count} ${count===1?'person has':'people have'} already joined.`,
   stop:'You’re unsubscribed from Mango texts. Reply START whenever you want back in.',
   start:'Welcome back 🥭 Mango texts are on again. What should we find?',
   help:'Mango helps with Stamford plans, places, volunteering, student life, and social matching. Reply STOP to pause. Support: support@trillium.one',

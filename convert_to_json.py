@@ -85,8 +85,9 @@ def convert(xlsx_path, json_path):
             starts_at = combine_datetime(rec.get("event_date"), rec.get("start_time"))
             ends_at = combine_datetime(rec.get("event_date"), rec.get("end_time")) if rec.get("end_time") else None
 
+            opp_id = str(uuid.uuid4())
             opportunity = {
-                "id": str(uuid.uuid4()),
+                "id": opp_id,
                 "kind": (rec.get("kind") or "event").strip().lower(),
                 "title": title,
                 "short_description": (rec.get("short_description") or "").strip(),
@@ -111,6 +112,9 @@ def convert(xlsx_path, json_path):
                 "photo_url": (rec.get("photo_url") or "").strip() or None,
                 "photo_source": (rec.get("photo_source") or "").strip() or None,
                 "category_source": tab,
+                # Mobile event page Mango texts on JOIN; mirrors the event_page_url
+                # column consumed by packages/seed-data and the launch-site /events route.
+                "event_page_url": f"https://mango-io.vercel.app/events/{opp_id}",
             }
             opportunities.append(opportunity)
 

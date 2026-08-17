@@ -47,10 +47,11 @@ export class Orchestrator {
     if(c.intent==='LEAVE_PLAN'){ if(session.active_recommendation_id) this.db.markExposure(session.id,session.active_recommendation_id,'rejected'); this.reply(user,session,inserted.id,'No problem, I left that plan untouched. Want another Stamford option?','leave'); return {accepted:true,userId:user.id,sessionId:session.id}; }
     if(c.intent==='APP_OR_CALENDAR'){ const link=this.appLink(user.id,session.id,'/for-you?view=calendar'); this.reply(user,session,inserted.id,`Your Mango week is here: ${link}`,'app'); return {accepted:true,userId:user.id,sessionId:session.id}; }
     if(c.intent==='MORE_OPTIONS' && this.db.exposures(session.id).length>=2){ const link=this.appLink(user.id,session.id,'/for-you?view=calendar'); this.reply(user,session,inserted.id,copy.appUpsell(link),'upsell'); this.db.updateSession(session.id,{state:'discovering'}); return {accepted:true,userId:user.id,sessionId:session.id,upsell:true}; }
-    if(c.intent==='REJECT_RECOMMENDATION'&&session.active_recommendation_id) this.db.markExposure(session.id,session.active_recommendation_id,'rejected');
+    if(c.intent==='REJECT_RECOMMENDATION'&&session.active_recommendation_id){ this.db.markExposure(session.id,session.active_recommendation_id,'rejected'); const rejected=this.db.getOpportunity(session.active_recommendation_id); this.db.updateSession(session.id,{summary:this.appendSummary(session,`rejected ${rejected?.title||'last pick'}`)}); session=this.db.getSession(session.id)!; }
     return {...await this.discovery(user,session,inserted.id,text,c.intent),userId:user.id,sessionId:session.id};
   }
   private increment(s:SessionRow){ const turns=s.inbound_turns+1; this.db.updateSession(s.id,{inbound_turns:turns,last_activity_at:new Date().toISOString(),version:s.version+1}); }
+  private appendSummary(s:SessionRow,note:string){ return (s.summary?`${s.summary}; ${note}`:note).slice(-400); }
   private async discovery(user:UserRow,session:SessionRow,inboundId:string,text:string,intent:Intent){
     let requestText=text;
     let previous:Record<string,unknown>={};

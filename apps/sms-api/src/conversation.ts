@@ -13,6 +13,8 @@ export function extractNameAndRequest(text:string):NameAndRequest|undefined {
   const request=(prefixed[2]||prefixed[3]||'').trim();
   return {name:prefixed[1],...(request?{request}:{})};
 }
+// Filler words that pass the alphabetic name pattern but are never a first name.
+const NAME_STOPLIST=new Set(['yes','yeah','yep','no','nah','nope','ok','okay','sure','maybe','hey','hi','hello','yo','hiya','sup','thanks','thank you','cool','nice','fine','what','who','why','how','when','where','idk','dunno','hmm','hm','umm','um','lol','haha','test','mango','good morning','good afternoon','good evening','good night','whats up',"what's up"]);
 export function classify(text:string, state:SessionState, hasName:boolean):Classified {
   const t=clean(text);
   if (/^(stop|unsubscribe|cancel)$/i.test(t)) return {intent:'COMMAND_STOP',safety:'normal',entities:{}};
@@ -24,9 +26,9 @@ export function classify(text:string, state:SessionState, hasName:boolean):Class
   if (/\b(code|coding|homework|politics|president|stock|crypto|diagnos|lawsuit|legal advice|tax|loan|porn|sex chat)\b/i.test(text)) return {intent:'OFF_TOPIC',safety:'off_topic',entities:{}};
   if (/^(join|i['’]?m in|add me|yes add|count me in)$/i.test(t)) return {intent:'JOIN_PLAN',safety:'normal',entities:{}};
   if (/\b(leave|remove me|cancel my)\b/i.test(text)) return {intent:'LEAVE_PLAN',safety:'normal',entities:{}};
-  if (/\b(more|anything else|another|other option|show me everything|all events|calendar|my week|browse)\b/i.test(text)) return {intent:/calendar|my week|all events|browse/i.test(text)?'APP_OR_CALENDAR':'MORE_OPTIONS',safety:'normal',entities:{}};
-  if (/\b(not |no thanks|don'?t want|hate|instead|different)\b/i.test(text)) return {intent:'REJECT_RECOMMENDATION',safety:'normal',entities:{}};
-  if (!hasName && (state==='awaiting_name'||state==='new') && /^[a-z][a-z '-]{1,40}$/i.test(t)) return {intent:'PROVIDE_NAME',safety:'normal',entities:{name:text.trim()}};
+  if (/\b(more|anything else|what else|else is there|other options?|another|show me everything|all events|calendar|my week|browse)\b/i.test(text)) return {intent:/calendar|my week|all events|browse/i.test(text)?'APP_OR_CALENDAR':'MORE_OPTIONS',safety:'normal',entities:{}};
+  if (/\b(no thanks|don'?t want|hate (?:it|that|this)|something (?:else|different)|not (?:that|this|interested|feeling|for me|really)|nope|instead)\b/i.test(text)) return {intent:'REJECT_RECOMMENDATION',safety:'normal',entities:{}};
+  if (!hasName && (state==='awaiting_name'||state==='new') && !NAME_STOPLIST.has(t) && /^[a-z][a-z '-]{1,40}$/i.test(t)) return {intent:'PROVIDE_NAME',safety:'normal',entities:{name:text.trim()}};
   if (/\b(meet people|new people|social|group|friends|crowd)\b/i.test(text)) return {intent:'SOCIAL_MATCH',safety:'normal',entities:{social:true}};
   if (/\b(useful|volunteer|civic|community|cleanup|help out)\b/i.test(text)) return {intent:'CIVIC_VOLUNTEER',safety:'normal',entities:{civic:true}};
   if (/\b(campus|uconn|between classes|student)\b/i.test(text)) return {intent:'STUDENT_GAP',safety:'normal',entities:{student:true}};
@@ -79,7 +81,7 @@ function bookClubLibraryFallback(candidates:OpportunityRow[],message:string) {
     || candidates.find(o=>o.kind==='place'&&/Ferguson Library/i.test(`${o.title} ${o.venue_name}`));
 }
 
-export function isGroundedRecommendation(message:string,x:Scored) { const tags=JSON.parse(x.opportunity.tags_json) as string[]; const required=/soccer|football|futsal/i.test(message)?['soccer']:/\bsports?\b|athletic/i.test(message)?['sports']:[]; if(required.some(t=>!tags.includes(t)))return false; const wanted=dayWanted(message); if(wanted&&x.opportunity.kind!=='place'&&!timeMatches(x.opportunity.starts_at,wanted))return false; return required.length>0||messageTags(message).some(t=>tags.includes(t))||!!wanted||/surprise me|anything|something to do|what can i do|activity|event|plan|\bmore\b|what else|another|other option/i.test(message); }
+export function isGroundedRecommendation(message:string,x:Scored) { const tags=JSON.parse(x.opportunity.tags_json) as string[]; const required=/soccer|football|futsal/i.test(message)?['soccer']:/\bsports?\b|athletic/i.test(message)?['sports']:/\b(useful|volunteer|civic|cleanup)\b/i.test(message)?['civic']:[]; if(required.some(t=>!tags.includes(t)))return false; const wanted=dayWanted(message); if(wanted&&x.opportunity.kind!=='place'&&!timeMatches(x.opportunity.starts_at,wanted))return false; return required.length>0||messageTags(message).some(t=>tags.includes(t))||!!wanted||/surprise me|anything|something to do|what can i do|activity|event|plan|\bmore\b|what else|else is there|another|other option/i.test(message); }
 
 export function formatRecommendation(x:Scored,_count=0,matchType:SemanticMatchType='exact',socialNudge=false,weather?:EventWeather) { const o=x.opportunity; const when=o.starts_at ? new Date(o.starts_at).toLocaleString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZone:'America/New_York'}) : (o.recurring_text||'flexible hours'); const price=o.price_cents>0?` $${(o.price_cents/100).toFixed(0)}.`:''; const reason=x.reasons.filter(r=>r!=='FREE').slice(0,3).map(r=>({TIME_EXACT:'fits your timing',SOCCER_MATCH:'soccer',SPORTS_MATCH:'sports',FITNESS_MATCH:'active',OUTDOOR_MATCH:'outdoors',CIVIC_INTENT:'useful/civic',NEAR_CAMPUS:'near campus',SMALL_GROUP:'small-group friendly',SOCIAL_FIT:'social',BUDGET_FIT:'fits your budget',STUDENT_FIT:'student-friendly'}[r]||r.toLowerCase())).join(', '); const lead=matchType==='adjacent'?`I don't have an exact match, but ${o.title} is the closest Stamford fit`:`I'd pick ${o.title}`; const weatherNote=weather?` Forecast near start: ${weather.temperature_f} F and ${weather.condition}, ${weather.precipitation_probability}% rain. ${weather.suggestion}`:''; const nudge=socialNudge?' Two people with similar interests may be joining. I have a feeling you might hit it off.':''; return `${lead}. ${when}, ${o.neighborhood}.${price} ${reason||'Worth a look'}.${weatherNote}${nudge} Reply JOIN and I'll add it.`; }
 

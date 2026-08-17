@@ -30,7 +30,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "CT"
+    "category_source": "CT",
+    "event_page_url": "https://mango-io.vercel.app/events/5543ea6b-4699-403a-8e1d-6d0530ba4847"
   },
   {
     "id": "06a85370-894b-418d-bcbf-9869936ff6cd",
@@ -61,7 +62,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "CT"
+    "category_source": "CT",
+    "event_page_url": "https://mango-io.vercel.app/events/06a85370-894b-418d-bcbf-9869936ff6cd"
   },
   {
     "id": "b7c3df2a-1306-4489-aee9-be4de617abbe",
@@ -93,7 +95,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "CT"
+    "category_source": "CT",
+    "event_page_url": "https://mango-io.vercel.app/events/b7c3df2a-1306-4489-aee9-be4de617abbe"
   },
   {
     "id": "b2dd4e9d-88b2-4573-8c05-c55238dcaa53",
@@ -125,7 +128,8 @@
     "group_style": "small",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "PR"
+    "category_source": "PR",
+    "event_page_url": "https://mango-io.vercel.app/events/b2dd4e9d-88b2-4573-8c05-c55238dcaa53"
   },
   {
     "id": "f82ea9c1-033e-467d-96e5-8994067b6caa",
@@ -158,7 +162,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "PR"
+    "category_source": "PR",
+    "event_page_url": "https://mango-io.vercel.app/events/f82ea9c1-033e-467d-96e5-8994067b6caa"
   },
   {
     "id": "ddf556ca-7c87-48d7-8f32-81f902506356",
@@ -191,7 +196,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "PR"
+    "category_source": "PR",
+    "event_page_url": "https://mango-io.vercel.app/events/ddf556ca-7c87-48d7-8f32-81f902506356"
   },
   {
     "id": "472ec9b7-1a2d-44ba-bdab-1d71bd7234c3",
@@ -224,7 +230,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "PR"
+    "category_source": "PR",
+    "event_page_url": "https://mango-io.vercel.app/events/472ec9b7-1a2d-44ba-bdab-1d71bd7234c3"
   },
   {
     "id": "5ed9e09a-fa40-4b56-a9aa-a10e7b4951c6",
@@ -257,7 +264,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "PR"
+    "category_source": "PR",
+    "event_page_url": "https://mango-io.vercel.app/events/5ed9e09a-fa40-4b56-a9aa-a10e7b4951c6"
   },
   {
     "id": "0e348830-5efd-4cd0-b145-b7bee43b9585",
@@ -288,7 +296,8 @@
     "group_style": "small",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "UC"
+    "category_source": "UC",
+    "event_page_url": "https://mango-io.vercel.app/events/0e348830-5efd-4cd0-b145-b7bee43b9585"
   },
   {
     "id": "44d3851b-883e-46d9-bae5-8c3186817c7b",
@@ -322,7 +331,8 @@
       "notes": "Support-focused, safe space"
     },
     "transport_notes": null,
-    "category_source": "UC"
+    "category_source": "UC",
+    "event_page_url": "https://mango-io.vercel.app/events/44d3851b-883e-46d9-bae5-8c3186817c7b"
   },
   {
     "id": "6e305296-fdb8-4912-b59f-89c70ef4d10f",
@@ -354,7 +364,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "UC"
+    "category_source": "UC",
+    "event_page_url": "https://mango-io.vercel.app/events/6e305296-fdb8-4912-b59f-89c70ef4d10f"
   },
   {
     "id": "c46c2db7-9196-4c0c-9a65-07a501f1f62f",
@@ -386,7 +397,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "UC"
+    "category_source": "UC",
+    "event_page_url": "https://mango-io.vercel.app/events/c46c2db7-9196-4c0c-9a65-07a501f1f62f"
   },
   {
     "id": "7ff28c53-20a0-4ed3-bac9-bc7adf312cf1",
@@ -417,7 +429,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "UC"
+    "category_source": "UC",
+    "event_page_url": "https://mango-io.vercel.app/events/7ff28c53-20a0-4ed3-bac9-bc7adf312cf1"
   },
   {
     "id": "6f1957e9-d0fb-46bb-9e1b-fff6fe1484ec",
@@ -449,7 +462,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "UC"
+    "category_source": "UC",
+    "event_page_url": "https://mango-io.vercel.app/events/6f1957e9-d0fb-46bb-9e1b-fff6fe1484ec"
   },
   {
     "id": "80bf7f07-bfb3-4d98-956f-6c0a63db5ae0",
@@ -483,7 +497,8 @@
     "group_style": "small",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "VO"
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/80bf7f07-bfb3-4d98-956f-6c0a63db5ae0"
   },
   {
     "id": "4c99bacb-a305-4ee4-b0b0-a218b1121bbf",
@@ -517,7 +532,8 @@
       "notes": "Must be 16+, able to lift 25-30 lbs"
     },
     "transport_notes": null,
-    "category_source": "VO"
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/4c99bacb-a305-4ee4-b0b0-a218b1121bbf"
   },
   {
     "id": "b49e9f37-a7a6-414d-95f6-b035a01354d0",
@@ -550,7 +566,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "VO"
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/b49e9f37-a7a6-414d-95f6-b035a01354d0"
   },
   {
     "id": "e72f8aa5-0852-45a1-bdd6-f5aeaddb4575",
@@ -582,7 +599,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "VO"
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/e72f8aa5-0852-45a1-bdd6-f5aeaddb4575"
   },
   {
     "id": "27f5e7c9-d52f-4665-8b49-5c87d65ad02d",
@@ -614,7 +632,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "VO"
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/27f5e7c9-d52f-4665-8b49-5c87d65ad02d"
   },
   {
     "id": "20b2ebcf-8462-4bad-8dad-7f473440b29f",
@@ -649,7 +668,8 @@
       "notes": "Outdoor, expect to be on feet, lift up to 25 lbs"
     },
     "transport_notes": null,
-    "category_source": "VO"
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/20b2ebcf-8462-4bad-8dad-7f473440b29f"
   },
   {
     "id": "3841ebf4-33b5-4da2-9bd4-683de523be7a",
@@ -682,7 +702,8 @@
     "group_style": "medium",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "VO"
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/3841ebf4-33b5-4da2-9bd4-683de523be7a"
   },
   {
     "id": "7af80863-70b9-48d4-8beb-a6325d6907a5",
@@ -715,7 +736,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "VO"
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/7af80863-70b9-48d4-8beb-a6325d6907a5"
   },
   {
     "id": "adaba58c-3e08-49b9-9a95-482428178b7d",
@@ -751,7 +773,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "EV"
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/adaba58c-3e08-49b9-9a95-482428178b7d"
   },
   {
     "id": "bf8faa58-31dc-4822-959c-d3eea7790cd6",
@@ -787,7 +810,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "EV"
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/bf8faa58-31dc-4822-959c-d3eea7790cd6"
   },
   {
     "id": "91852448-f5e6-4f10-98e8-4cf0958f4b5d",
@@ -823,7 +847,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "EV"
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/91852448-f5e6-4f10-98e8-4cf0958f4b5d"
   },
   {
     "id": "c2a94c8f-0d38-4613-80a4-5981e32bcfba",
@@ -860,7 +885,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "EV"
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/c2a94c8f-0d38-4613-80a4-5981e32bcfba"
   },
   {
     "id": "d46ef20f-42ea-4de0-a30d-15d9bc823fb3",
@@ -897,7 +923,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "EV"
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/d46ef20f-42ea-4de0-a30d-15d9bc823fb3"
   },
   {
     "id": "acf2abbc-e396-404d-8119-fc7b0ef6b707",
@@ -932,7 +959,8 @@
     "group_style": "crowd",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "EV"
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/acf2abbc-e396-404d-8119-fc7b0ef6b707"
   },
   {
     "id": "181cb711-367d-488b-bb31-e85fe4d8168d",
@@ -964,7 +992,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "EV"
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/181cb711-367d-488b-bb31-e85fe4d8168d"
   },
   {
     "id": "aac46ebc-9156-4683-8b97-4fed197eea72",
@@ -998,7 +1027,8 @@
     "group_style": "crowd",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "EV"
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/aac46ebc-9156-4683-8b97-4fed197eea72"
   },
   {
     "id": "7a2dd35f-e9c3-471c-93e7-c016da6782ac",
@@ -1037,7 +1067,8 @@
       "notes": "Paved trail, accessible"
     },
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/7a2dd35f-e9c3-471c-93e7-c016da6782ac"
   },
   {
     "id": "0b80a2e3-e055-498f-8bea-934a1abf29b2",
@@ -1072,7 +1103,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/0b80a2e3-e055-498f-8bea-934a1abf29b2"
   },
   {
     "id": "2757fb3f-d7b9-41e7-ae58-2608b0ba5874",
@@ -1108,7 +1140,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/2757fb3f-d7b9-41e7-ae58-2608b0ba5874"
   },
   {
     "id": "26f15ac4-6ff8-4565-bc9c-cb68a3de3c92",
@@ -1141,7 +1174,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/26f15ac4-6ff8-4565-bc9c-cb68a3de3c92"
   },
   {
     "id": "fcb324bf-8edb-41d7-be63-fc028ae510cc",
@@ -1176,7 +1210,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/fcb324bf-8edb-41d7-be63-fc028ae510cc"
   },
   {
     "id": "d926ac6e-63af-4a7e-a554-d9aa842ad876",
@@ -1208,7 +1243,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/d926ac6e-63af-4a7e-a554-d9aa842ad876"
   },
   {
     "id": "7589a490-76c1-402b-b4a7-6cfe5b1b8ee1",
@@ -1240,7 +1276,8 @@
     "group_style": "small",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/7589a490-76c1-402b-b4a7-6cfe5b1b8ee1"
   },
   {
     "id": "e3d95c01-0d36-40a3-b88a-666b6c321b91",
@@ -1272,7 +1309,8 @@
     "group_style": "small",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/e3d95c01-0d36-40a3-b88a-666b6c321b91"
   },
   {
     "id": "e1cb22ec-efa9-42b0-8920-b6250aad4c76",
@@ -1307,7 +1345,8 @@
     "group_style": "solo_ok",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/e1cb22ec-efa9-42b0-8920-b6250aad4c76"
   },
   {
     "id": "9449acee-3a51-4e04-a4d7-9d307e56b163",
@@ -1342,7 +1381,8 @@
     "group_style": "small",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/9449acee-3a51-4e04-a4d7-9d307e56b163"
   },
   {
     "id": "4fb846e0-7ebf-454a-8033-314abeb3c05a",
@@ -1375,7 +1415,8 @@
     "group_style": "solo_ok",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/4fb846e0-7ebf-454a-8033-314abeb3c05a"
   },
   {
     "id": "c19b0a6a-6df4-4656-9cc4-b12a00e0f800",
@@ -1411,7 +1452,8 @@
       "notes": "Fully accessible, parking on site"
     },
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/c19b0a6a-6df4-4656-9cc4-b12a00e0f800"
   },
   {
     "id": "5b2ea0c1-c25a-4db3-97b5-0060dcd25b72",
@@ -1442,7 +1484,8 @@
     "group_style": null,
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/5b2ea0c1-c25a-4db3-97b5-0060dcd25b72"
   },
   {
     "id": "6e137ede-ff6c-420d-8dca-fbe0f6c81162",
@@ -1476,7 +1519,8 @@
     "group_style": "solo_ok",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/6e137ede-ff6c-420d-8dca-fbe0f6c81162"
   },
   {
     "id": "69980cd8-d4b6-421f-935b-42113ff1ba91",
@@ -1512,7 +1556,8 @@
       "notes": "1,580-seat venue"
     },
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/69980cd8-d4b6-421f-935b-42113ff1ba91"
   },
   {
     "id": "0980861f-cfb7-4a99-9a27-9632014ea7e5",
@@ -1549,7 +1594,8 @@
       "notes": "Accessible loop trail"
     },
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/0980861f-cfb7-4a99-9a27-9632014ea7e5"
   },
   {
     "id": "640c4d66-f27a-4f5e-9e4c-8d9ec1d78053",
@@ -1583,7 +1629,8 @@
     "group_style": "small",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/640c4d66-f27a-4f5e-9e4c-8d9ec1d78053"
   },
   {
     "id": "792528a7-3852-4260-bc74-159512377eba",
@@ -1616,7 +1663,8 @@
     "group_style": "small",
     "accessibility": null,
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/792528a7-3852-4260-bc74-159512377eba"
   },
   {
     "id": "c056ac08-a7cc-42ef-b781-e25d0cb9a978",
@@ -1652,6 +1700,614 @@
       "notes": "Fully accessible, 1,500 parking spaces"
     },
     "transport_notes": null,
-    "category_source": "LP"
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/c056ac08-a7cc-42ef-b781-e25d0cb9a978"
+  },
+  {
+    "id": "a6893a63-7f36-45df-ad38-662e8b8199cd",
+    "kind": "event",
+    "title": "Toddler Storytime at Ferguson Library",
+    "short_description": "Cozy play group and storytime with books, movement, and activities for children ages 4 and under with a caregiver.",
+    "venue_name": "Ferguson Library (Main / DiMattia Building)",
+    "neighborhood": "Downtown",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Weekly toddler storytime; check the library calendar for the current schedule.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Ferguson Library",
+    "source_url": "https://www.fergusonlibrary.org/services/kids",
+    "is_demo_data": true,
+    "tags": [
+      "kids",
+      "family",
+      "caregiver",
+      "learning",
+      "free",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "all"
+    ],
+    "group_style": "small",
+    "accessibility": null,
+    "transport_notes": "Downtown Stamford; parking garage on-site and served by CTtransit routes.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/a6893a63-7f36-45df-ad38-662e8b8199cd"
+  },
+  {
+    "id": "aa665e9b-04d6-4df8-8c8c-1e3b2a0832c5",
+    "kind": "event",
+    "title": "Family Storytime at Ferguson Library",
+    "short_description": "Participatory storytime with songs, fingerplays, and movement for ages 18 months to 5 years with a caregiver. Registration required, no walk-ins.",
+    "venue_name": "Ferguson Library (Main / DiMattia Building)",
+    "neighborhood": "Downtown",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Recurring family storytime; registration required via the library event page.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Ferguson Library",
+    "source_url": "https://www.fergusonlibrary.org/event/family-storytime-71",
+    "is_demo_data": true,
+    "tags": [
+      "kids",
+      "family",
+      "caregiver",
+      "learning",
+      "free",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "all"
+    ],
+    "group_style": "small",
+    "accessibility": {
+      "notes": "Elevator-served public library building."
+    },
+    "transport_notes": "Downtown Stamford; parking garage on-site.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/aa665e9b-04d6-4df8-8c8c-1e3b2a0832c5"
+  },
+  {
+    "id": "055b867d-8feb-4e18-b48d-dd762ee0dd6a",
+    "kind": "place",
+    "title": "Heckscher Farm \u2014 Stamford Museum & Nature Center",
+    "short_description": "Family-friendly working farm and 118-acre nature center with trails, farm animals, and youth & family programs.",
+    "venue_name": "Stamford Museum & Nature Center",
+    "neighborhood": "North Stamford",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Open daily; farm and trails plus scheduled youth & family programs.",
+    "price_cents": 1400,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Stamford Museum & Nature Center",
+    "source_url": "https://www.stamfordmuseum.org/child-youth/",
+    "is_demo_data": true,
+    "tags": [
+      "kids",
+      "family",
+      "caregiver",
+      "nature",
+      "outdoors",
+      "learning"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "all"
+    ],
+    "group_style": "small",
+    "accessibility": null,
+    "transport_notes": "North Stamford near Merritt Parkway Exit 35; on-site parking, limited transit.",
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/055b867d-8feb-4e18-b48d-dd762ee0dd6a"
+  },
+  {
+    "id": "b304c2af-d799-41a3-954c-a0396e04e368",
+    "kind": "place",
+    "title": "Mill River Bark Park",
+    "short_description": "Fenced off-leash dog park in the heart of Mill River Park with a separate area for small dogs and a friendly regular dog-owner community.",
+    "venue_name": "Mill River Park",
+    "neighborhood": "Downtown",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Open daily during park hours; busiest mornings and early evenings.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Mill River Park Collaborative",
+    "source_url": "https://millriverpark.org/dogpark/",
+    "is_demo_data": true,
+    "tags": [
+      "dog_friendly",
+      "pets",
+      "outdoors",
+      "social",
+      "free",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "all"
+    ],
+    "group_style": "medium",
+    "accessibility": {
+      "notes": "Paved park paths; fenced enclosure with double-gate entry."
+    },
+    "transport_notes": "Downtown Stamford; street and garage parking nearby, walkable from the Transportation Center.",
+    "category_source": "PR",
+    "event_page_url": "https://mango-io.vercel.app/events/b304c2af-d799-41a3-954c-a0396e04e368"
+  },
+  {
+    "id": "ad3d5a90-f4b9-4f6f-a9f2-e5a541214f4c",
+    "kind": "place",
+    "title": "Stamford Dog Park at Courtland Park",
+    "short_description": "Fully fenced neighborhood dog park with a separate small-dog area, benches, and shade \u2014 a low-key spot to meet other pet parents.",
+    "venue_name": "Courtland Park",
+    "neighborhood": "Glenbrook",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Open daily during park hours.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "BringFido",
+    "source_url": "https://www.bringfido.com/attraction/parks/city/stamford_ct_us/",
+    "is_demo_data": true,
+    "tags": [
+      "dog_friendly",
+      "pets",
+      "outdoors",
+      "social",
+      "free",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "all"
+    ],
+    "group_style": "small",
+    "accessibility": null,
+    "transport_notes": "Glenbrook neighborhood; street parking available.",
+    "category_source": "PR",
+    "event_page_url": "https://mango-io.vercel.app/events/ad3d5a90-f4b9-4f6f-a9f2-e5a541214f4c"
+  },
+  {
+    "id": "f005183d-851f-4bb1-97e5-91399acbb7ec",
+    "kind": "event",
+    "title": "Bark in the Park",
+    "short_description": "Free community pet day for dogs and their owners with an agility course, photo booth, microchip clinic, costume and trick contests, a splash zone, and an adoption area.",
+    "venue_name": "Latham Park",
+    "neighborhood": "Downtown",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Seasonal community event; all friendly leashed dogs welcome.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Darienite / City of Stamford",
+    "source_url": "https://darienite.com/event/bark-in-the-park-for-dogs-and-their-owners-in-stamfords-latham-park",
+    "is_demo_data": true,
+    "tags": [
+      "dog_friendly",
+      "pets",
+      "family",
+      "community",
+      "festival",
+      "free",
+      "outdoors"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "all"
+    ],
+    "group_style": "crowd",
+    "accessibility": null,
+    "transport_notes": "Latham Park, downtown; street and garage parking nearby.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/f005183d-851f-4bb1-97e5-91399acbb7ec"
+  },
+  {
+    "id": "610555af-cd5a-42cb-9e3a-82cd955f97c5",
+    "kind": "place",
+    "title": "ZSTRICT Indoor Golf at Chelsea Piers Connecticut",
+    "short_description": "11,000 sq ft indoor golf simulator lounge with 10 bays and 200+ virtual courses \u2014 a great rainy-day alternative to a round outdoors. No membership required.",
+    "venue_name": "Chelsea Piers Connecticut, 1 Blachley Rd Suite 102",
+    "neighborhood": "Waterside",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Mon-Fri 9am-11pm, Sat-Sun 9am-10:30pm. Book a bay online.",
+    "price_cents": 6000,
+    "capacity": "10 simulator bays",
+    "status": "active",
+    "source_name": "ZSTRICT",
+    "source_url": "https://www.zstrict.com/",
+    "is_demo_data": true,
+    "tags": [
+      "golf",
+      "sports",
+      "indoor",
+      "social",
+      "rainy_day",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "student",
+      "all"
+    ],
+    "group_style": "small",
+    "accessibility": {
+      "notes": "Indoor sports complex with accessible entrance and parking."
+    },
+    "transport_notes": "Waterside / Blachley Rd; large on-site parking lot at Chelsea Piers.",
+    "category_source": "LP",
+    "event_page_url": "https://mango-io.vercel.app/events/610555af-cd5a-42cb-9e3a-82cd955f97c5"
+  },
+  {
+    "id": "bb1991c7-9dce-4843-9168-d491ac334209",
+    "kind": "event",
+    "title": "Stamford Downtown Farmers Market",
+    "short_description": "Outdoor farmers market with local produce, bakers, and makers at Veterans Memorial Park each Saturday in season.",
+    "venue_name": "Veterans Memorial Park, 130 Atlantic St",
+    "neighborhood": "Downtown",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Saturdays 9am-1pm, mid-June through October.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Stamford Downtown Special Services District",
+    "source_url": "http://stamford-downtown.com/events/",
+    "is_demo_data": true,
+    "tags": [
+      "market",
+      "food",
+      "local",
+      "outdoors",
+      "family",
+      "free",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "student",
+      "all"
+    ],
+    "group_style": "crowd",
+    "accessibility": null,
+    "transport_notes": "Downtown; walkable from the Stamford Transportation Center, nearby garages.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/bb1991c7-9dce-4843-9168-d491ac334209"
+  },
+  {
+    "id": "2fa2419d-41d3-40e5-a7f9-1ddd719b9e22",
+    "kind": "event",
+    "title": "Fairgate Farm Farmers Market",
+    "short_description": "Neighborhood urban-farm market with fresh, affordable produce grown on-site in the West Side.",
+    "venue_name": "Fairgate Farm, 129 Stillwater Ave",
+    "neighborhood": "West Side",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Thursdays 11am-2pm and Saturdays from 9am in season.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Fairgate Farm",
+    "source_url": "https://www.heystamford.com/best-farmers-markets-in-stamford-ct-2026-guide/",
+    "is_demo_data": true,
+    "tags": [
+      "market",
+      "food",
+      "local",
+      "community",
+      "outdoors",
+      "free",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "all"
+    ],
+    "group_style": "medium",
+    "accessibility": null,
+    "transport_notes": "West Side, Stillwater Ave; street parking, CTtransit nearby.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/2fa2419d-41d3-40e5-a7f9-1ddd719b9e22"
+  },
+  {
+    "id": "24201f65-7d92-47b4-90c2-750e68b24f2b",
+    "kind": "event",
+    "title": "Stamford Museum & Nature Center Farmers' Market",
+    "short_description": "Sunday farmers market on the grounds of the Stamford Museum & Nature Center with regional farms and vendors.",
+    "venue_name": "Stamford Museum & Nature Center, 39 Scofieldtown Rd",
+    "neighborhood": "North Stamford",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Sundays in season on the museum grounds.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "National Farmers Market Directory",
+    "source_url": "https://nfmd.org/ct/stamford/1007512",
+    "is_demo_data": true,
+    "tags": [
+      "market",
+      "food",
+      "local",
+      "family",
+      "outdoors",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "all"
+    ],
+    "group_style": "medium",
+    "accessibility": null,
+    "transport_notes": "North Stamford near Merritt Parkway Exit 35; on-site parking.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/24201f65-7d92-47b4-90c2-750e68b24f2b"
+  },
+  {
+    "id": "a878263e-a588-4780-9243-dc9af10eb11e",
+    "kind": "event",
+    "title": "Harbor Point Farmers Market",
+    "short_description": "Waterfront Sunday farmers market at Harbor Point with produce, prepared food, and family activities.",
+    "venue_name": "Harbor Point Commons",
+    "neighborhood": "Harbor Point",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Sundays starting at 9am in season.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Hey Stamford!",
+    "source_url": "https://www.heystamford.com/best-farmers-markets-in-stamford-ct-2026-guide/",
+    "is_demo_data": true,
+    "tags": [
+      "market",
+      "food",
+      "local",
+      "outdoors",
+      "family",
+      "free",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "student",
+      "all"
+    ],
+    "group_style": "crowd",
+    "accessibility": null,
+    "transport_notes": "Harbor Point / South End; walkable, trolley and on-site parking.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/a878263e-a588-4780-9243-dc9af10eb11e"
+  },
+  {
+    "id": "325a9d83-de18-46af-8ebb-384ae0412ce2",
+    "kind": "volunteer",
+    "title": "Food Bank of Lower Fairfield County \u2014 Volunteer Shifts",
+    "short_description": "Sort and pack food for neighbors in need. Individuals 16+ and small groups by appointment; walk-ins not accepted.",
+    "venue_name": "Food Bank of Lower Fairfield County, 461 Glenbrook Rd",
+    "neighborhood": "Glenbrook",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Mon-Fri 8am-3pm by appointment (summer hours 8am-2pm).",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Food Bank of Lower Fairfield County",
+    "source_url": "https://www.foodbanklfc.org/how-to-help",
+    "is_demo_data": true,
+    "tags": [
+      "civic",
+      "volunteer",
+      "food_security",
+      "community",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "student",
+      "all"
+    ],
+    "group_style": "small",
+    "accessibility": null,
+    "transport_notes": "Glenbrook, 461 Glenbrook Rd; on-site parking, near Glenbrook train station.",
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/325a9d83-de18-46af-8ebb-384ae0412ce2"
+  },
+  {
+    "id": "2e97b008-05a0-4049-8fe2-c3f6f8af1df7",
+    "kind": "volunteer",
+    "title": "Mobile Pantry \u2014 Stamford (Filling in the Blanks)",
+    "short_description": "Help set up tables, organize food for distribution, and break down at a mobile food pantry serving Stamford families.",
+    "venue_name": "Cloonan Middle School, 11 West North St",
+    "neighborhood": "Downtown",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Scheduled distribution shifts; register online for an available date.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Filling in the Blanks",
+    "source_url": "https://www.volunteerfillingintheblanks.org/need/detail/?need_id=1238031",
+    "is_demo_data": true,
+    "tags": [
+      "civic",
+      "volunteer",
+      "food_security",
+      "community",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "student",
+      "all"
+    ],
+    "group_style": "medium",
+    "accessibility": null,
+    "transport_notes": "Cloonan Middle School, West North St; on-site parking.",
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/2e97b008-05a0-4049-8fe2-c3f6f8af1df7"
+  },
+  {
+    "id": "422e25d1-40e6-4393-ab7e-3969bb59cd39",
+    "kind": "volunteer",
+    "title": "Food Pantry Volunteer \u2014 Building One Community",
+    "short_description": "Support the food pantry at Building One Community, which serves Stamford's immigrant and neighbor community. Volunteers must be 16+.",
+    "venue_name": "Building One Community (B1C), 75 Selleck St",
+    "neighborhood": "South End",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Mondays 12:30pm-2:00pm, every other week.",
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Idealist",
+    "source_url": "https://www.idealist.org/en/volunteer-opportunity/87dba4002556484ca15fbc9c050c9cf9-food-pantry-volunteer-building-one-community-corp-stamford",
+    "is_demo_data": true,
+    "tags": [
+      "civic",
+      "volunteer",
+      "food_security",
+      "community",
+      "recurring"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "student",
+      "all"
+    ],
+    "group_style": "small",
+    "accessibility": null,
+    "transport_notes": "South End, 75 Selleck St; street parking, walkable from Harbor Point.",
+    "category_source": "VO",
+    "event_page_url": "https://mango-io.vercel.app/events/422e25d1-40e6-4393-ab7e-3969bb59cd39"
+  },
+  {
+    "id": "2e6c1ecd-5184-4450-9464-f30af43d9a93",
+    "kind": "event",
+    "title": "Live Music at The Palace Theatre",
+    "short_description": "Nationally touring concerts and shows at the historic Palace Theatre in downtown Stamford \u2014 check the calendar for current dates.",
+    "venue_name": "The Palace Theatre, 61 Atlantic St",
+    "neighborhood": "Downtown",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": null,
+    "ends_at": null,
+    "recurring_text": "Rotating concert and show calendar; tickets via the box office.",
+    "price_cents": 4500,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Stamford Center for the Arts",
+    "source_url": "https://www.eventbrite.com/d/ct--stamford/stamford-downtown/",
+    "is_demo_data": true,
+    "tags": [
+      "arts",
+      "music",
+      "culture",
+      "evening",
+      "social",
+      "events"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "student",
+      "all"
+    ],
+    "group_style": "crowd",
+    "accessibility": null,
+    "transport_notes": "Downtown Atlantic St; walkable from the Transportation Center, nearby garages.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/2e6c1ecd-5184-4450-9464-f30af43d9a93"
+  },
+  {
+    "id": "34ae2d4d-328c-4039-97aa-7d7d2ef4bdc3",
+    "kind": "event",
+    "title": "Health, Wellness & Lifestyle Expo at Harbor Point",
+    "short_description": "Community wellness expo at Harbor Point with fitness, health, and lifestyle exhibitors and demos.",
+    "venue_name": "Harbor Point",
+    "neighborhood": "Harbor Point",
+    "latitude": null,
+    "longitude": null,
+    "starts_at": "2026-09-12T10:00:00",
+    "ends_at": "2026-09-12T15:00:00",
+    "recurring_text": null,
+    "price_cents": 0,
+    "capacity": null,
+    "status": "active",
+    "source_name": "Eventbrite \u2014 Stamford",
+    "source_url": "https://www.eventbrite.com/d/ct--stamford/events/",
+    "is_demo_data": true,
+    "tags": [
+      "health",
+      "wellness",
+      "community",
+      "family",
+      "events",
+      "social"
+    ],
+    "audience": [
+      "resident",
+      "new_resident",
+      "student",
+      "all"
+    ],
+    "group_style": "crowd",
+    "accessibility": null,
+    "transport_notes": "Harbor Point / South End; walkable, trolley and on-site parking.",
+    "category_source": "EV",
+    "event_page_url": "https://mango-io.vercel.app/events/34ae2d4d-328c-4039-97aa-7d7d2ef4bdc3"
   }
 ]
