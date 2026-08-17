@@ -1,14 +1,19 @@
 import { readFileSync } from 'node:fs';
 import type { OpportunityKind, OpportunityStatus } from '@mango/contracts';
 
-export interface SeedOpportunity { id:string; kind:OpportunityKind; title:string; description:string; venueName:string; neighborhood:string; startsAt?:string; endsAt?:string; recurringText?:string; priceCents:number; status:OpportunityStatus; tags:string[]; audience:string[]; groupStyle:'solo_ok'|'small'|'medium'|'crowd'; accessibility:string[]; transportNotes:string; sourceName:string; sourceUrl:string; isDemoData:boolean; quality:number; }
+export interface SeedOpportunity { id:string; kind:OpportunityKind; title:string; description:string; venueName:string; neighborhood:string; startsAt?:string; endsAt?:string; recurringText?:string; priceCents:number; status:OpportunityStatus; tags:string[]; audience:string[]; groupStyle:'solo_ok'|'small'|'medium'|'crowd'; accessibility:string[]; transportNotes:string; sourceName:string; sourceUrl:string; isDemoData:boolean; quality:number; eventPageUrl:string; }
 export interface SeedPersona { id:string; firstName:string; userType:'resident'|'student'|'new_resident'; neighborhood:string; ageBand:string; interests:string[]; groupSize:'small'|'medium'|'crowd'; socialOptIn:boolean; transport:string; availability:string[]; }
+
+// Public base for the mobile event pages Mango texts on JOIN. Each opportunity's
+// canonical page is EVENT_PAGE_BASE + id (mirrors the event_page_url column in
+// opportunities.json). Kept here so deterministic records stay in sync with the catalog.
+export const EVENT_PAGE_BASE = 'https://mango-io.vercel.app/events/';
 
 const iso = (days:number, hour:number, minute=0) => { const d = new Date(); d.setUTCHours(hour, minute, 0, 0); d.setUTCDate(d.getUTCDate()+days); return d.toISOString(); };
 const end = (days:number, hour:number, duration=2) => { const d = new Date(iso(days,hour)); d.setUTCHours(d.getUTCHours()+duration); return d.toISOString(); };
 const nextSaturday = (()=>{ const day=new Date().getUTCDay(); return ((6-day+7)%7)||7; })();
 const nextSunday = (()=>{ const day=new Date().getUTCDay(); return ((7-day)%7)||7; })();
-const base = (id:string,title:string,kind:OpportunityKind,tags:string[],neighborhood:string,days:number,hour:number,priceCents=0,groupStyle:'solo_ok'|'small'|'medium'|'crowd'='small'):SeedOpportunity => ({id,title,kind,tags,neighborhood,venueName: neighborhood+' public venue',description:'A friendly Mango demo opportunity in Stamford.',startsAt:iso(days,hour),endsAt:end(days,hour),priceCents,status:'active',audience:['all'],groupStyle,accessibility:['step-free entrance unknown'],transportNotes:'Public venue; check transit before leaving.',sourceName:'Mango demo seed',sourceUrl:'https://demo.mango.local/opportunities/'+id,isDemoData:true,quality:70});
+const base = (id:string,title:string,kind:OpportunityKind,tags:string[],neighborhood:string,days:number,hour:number,priceCents=0,groupStyle:'solo_ok'|'small'|'medium'|'crowd'='small'):SeedOpportunity => ({id,title,kind,tags,neighborhood,venueName: neighborhood+' public venue',description:'A friendly Mango demo opportunity in Stamford.',startsAt:iso(days,hour),endsAt:end(days,hour),priceCents,status:'active',audience:['all'],groupStyle,accessibility:['step-free entrance unknown'],transportNotes:'Public venue; check transit before leaving.',sourceName:'Mango demo seed',sourceUrl:'https://demo.mango.local/opportunities/'+id,isDemoData:true,quality:70,eventPageUrl:EVENT_PAGE_BASE+id});
 
 // The Mill River Community Cleanup hero lives in the researched catalog
 // (opportunities.json) with real source provenance—no deterministic duplicate here,
@@ -27,7 +32,7 @@ interface DatasetOpportunity {
   id:string; kind:OpportunityKind; title:string; short_description:string; venue_name:string; neighborhood:string;
   starts_at:string|null; ends_at:string|null; recurring_text:string|null; price_cents:number; status:OpportunityStatus;
   tags:string[]; audience:string[]; group_style:string|null; accessibility:{notes?:string}|null; transport_notes:string|null;
-  source_name:string; source_url:string; is_demo_data:boolean;
+  source_name:string; source_url:string; is_demo_data:boolean; event_page_url?:string;
 }
 
 const tagAliases:Record<string,string[]> = {
@@ -50,7 +55,8 @@ const loadDataset = ():SeedOpportunity[] => {
       startsAt:o.starts_at||undefined, endsAt:o.ends_at||undefined, recurringText:o.recurring_text||undefined, priceCents:o.price_cents,
       status:o.status, tags, audience:o.audience, groupStyle:groupStyle(o.group_style,o.kind), accessibility,
       transportNotes:o.transport_notes||'Check transit, parking, and access details before leaving.', sourceName:o.source_name,
-      sourceUrl:o.source_url, isDemoData:o.is_demo_data, quality:datasetQuality(o)
+      sourceUrl:o.source_url, isDemoData:o.is_demo_data, quality:datasetQuality(o),
+      eventPageUrl:o.event_page_url||EVENT_PAGE_BASE+o.id
     };
   });
 };
