@@ -1,0 +1,19 @@
+[Unit]
+Description=Mango production magic-link SMS worker and ingress
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/stamford-hackathon
+EnvironmentFile=/home/ubuntu/.config/mango/magic-link.env
+EnvironmentFile=/home/ubuntu/.config/mango/hermes-production.env
+ExecStart=/usr/bin/node apps/sms-api/.production-dist/index.js
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=60
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

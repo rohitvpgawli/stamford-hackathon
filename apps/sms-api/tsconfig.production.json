@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "rootDir": "src/production", "outDir": ".production-dist", "types": ["node"] },
+  "include": ["src/production/**/*.ts"]
+}

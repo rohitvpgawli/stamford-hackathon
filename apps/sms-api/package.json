@@ -1,6 +1,28 @@
 {
-  "name":"@mango/sms-api","version":"1.0.0","private":true,"type":"module",
-  "scripts":{"build":"tsc -p tsconfig.json","typecheck":"tsc -p tsconfig.json --noEmit","start":"node dist/src/index.js","dev":"tsx watch src/index.ts","test":"npm run build && NODE_ENV=test node --test dist/test/core.test.js","load-test":"NODE_ENV=test node --import tsx scripts/load-test.ts"},
-  "dependencies":{"@mango/contracts":"*","fastify":"^5.0.0"},
-  "devDependencies":{"@types/node":"^22.0.0","tsx":"^4.19.0","typescript":"^5.6.0"}
+  "name": "@mango/sms-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/src/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "npm run build && NODE_ENV=test node --test dist/test/core.test.js",
+    "load-test": "NODE_ENV=test node --import tsx scripts/load-test.ts",
+    "sms-e2e": "node --import tsx scripts/sms-e2e.ts",
+    "production:build": "tsc -p tsconfig.production.json",
+    "production:test": "node --import tsx --test --test-concurrency=1 test/production.test.ts test/production-catalog.test.ts test/production-preflight.test.mjs test/configure-production.test.mjs",
+    "production:start": "node .production-dist/index.js"
+  },
+  "dependencies": {
+    "@mango/contracts": "*",
+    "fastify": "^5.12.3"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
 }

@@ -1,0 +1,16 @@
+[Unit]
+Description=Isolated tool-free Mango production Hermes gateway
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/.hermes/profiles/mango-production
+EnvironmentFile=/home/ubuntu/.hermes/profiles/mango-production/.env
+ExecStart=/home/ubuntu/.hermes/hermes-agent/venv/bin/python -m hermes_cli.main --profile mango-production gateway run
+Restart=on-failure
+RestartSec=10
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target
