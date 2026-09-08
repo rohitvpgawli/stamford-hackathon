@@ -4,7 +4,36 @@ Current scope: the existing Mango experience, same phone and SMS Gate bridge,
 with phone-only web login. Website owner follows website-changes-handoff.md.
 Do not deploy the website or apply its migrations from this runbook implicitly.
 
-## Prepared runtime
+## Current controlled test (2026-09-08)
+
+The authorized production worker is active on loopback **3001** with both
+release gates open; the legacy SMS service is stopped. The existing active
+Cloudflare tunnel still maps sms.bigmango.org to 3001. The 3002 references below
+describe the originally prepared deployment, not the current test routing.
+Public liveness, authenticated aggregate health, and an authenticated public
+MMS arrival probe pass. The probe only acknowledges metadata; it sends nothing.
+All six gateway configuration values match the legacy environment, and both
+MMS webhook registrations have the correct URL and shared secret.
+
+The production ingress previously ignored MMS, unlike the legacy service.
+It now acknowledges mms:received while waiting for mms:downloaded, then ingests
+the downloaded body or subject. It retains device/SIM, authentication, expiry,
+and deduplication checks, with the legacy 32KB payload bound. Attachments are
+not processed. Event type and HTTP status are logged without message contents,
+phone numbers, IDs, or credentials. Missing/wrong SIM still yields 403;
+oversized envelopes yield 413. The live MMS test completed end to end: the
+downloaded message was ingested, processed, sent through SMS Gate, and reached
+`delivered`.
+
+That test also exposed model responses arriving as prose or after the original
+15-second timeout. The worker now repeats the JSON contract beside the input,
+allows up to 50 seconds for the first model response within a 60-second total
+budget, and regenerates once only after a JSON parse failure. All content,
+event, link, and login-code validation remains enforced. Privacy-safe error
+codes identify the failed stage without logging message text, model output,
+phone numbers, IDs, or credentials. Production tests and build pass.
+
+## Originally prepared runtime
 
 - Existing mango gateway: loopback 8643; existing SMS service: loopback 3001.
 - Adapted mango-production gateway: loopback 8644, same configured model/voice,

@@ -152,6 +152,7 @@ export class Worker {
       }
     } catch (error) {
       // Do not log remote bodies/errors: they may contain bearer links or PII.
+      process.stderr.write(`${JSON.stringify({ event: 'mango_worker_error', code: errorCode(error) })}\n`);
       try {
         if (sending) await this.rpc('outcome', { ...lease, status: 'uncertain', error_code: errorCode(error) });
         else await this.rpc('retry', { ...lease, error_code: errorCode(error),

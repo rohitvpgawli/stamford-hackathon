@@ -312,7 +312,73 @@ test('existing authenticated device and SIM work without a separately configured
   } finally { await app.close(); }
 });
 
+test('MMS waits for download then ingests body or subject once with SMS security and expiry rules', async () => {
+  const h = harness(), app = productionApp(rpc, h.transport, {
+    webhookSecret: 'secret', adminSecret: 'admin', deviceId: 'device', sim: 1, receivingPhone: '+12035550999'
+  });
+  const body = { event: 'mms:downloaded', deviceId: 'device', payload: {
+    messageId: 'mms-1', phoneNumber: number, simNumber: '1', recipient: '+12035550999',
+    receivedAt: new Date().toISOString(), body: 'Hello Mango', subject: 'Fallback subject',
+    attachments: [{ contentType: 'image/png', data: 'x'.repeat(10_000) }]
+  } };
+  const call = (payload: any, authenticated = true) => app.inject({ method: 'POST', url: '/v1/channels/android/webhook',
+    headers: authenticated ? { 'x-mango-webhook-secret': 'secret' } : {}, payload });
+  try {
+    assert.equal((await call(body, false)).statusCode, 401);
+    assert.equal((await call({ ...body, payload: { ...body.payload, attachments: [{ data: 'x'.repeat(33_000) }] } })).statusCode, 413);
+    assert.equal((await call({ ...body, deviceId: 'other' })).statusCode, 403);
+    assert.equal((await call({ ...body, payload: { ...body.payload, simNumber: 2 } })).statusCode, 403);
+    assert.equal((await call({ ...body, payload: { ...body.payload, recipient: '+12035550888' } })).statusCode, 403);
+    assert.equal((await call({ ...body, event: 'mms:received' })).json().waiting_for_download, true);
+    assert.equal((await jobs()).length, 0);
+    assert.equal((await call(body)).statusCode, 202);
+    assert.equal((await call(body)).statusCode, 200);
+    assert.equal((await jobs()).length, 1);
+    assert.equal((await jobs())[0].input_text, 'Hello Mango');
+    assert.equal((await jobs())[0].phone, number);
+    assert.equal((await call({ ...body, payload: { ...body.payload, messageId: 'mms-subject', body: '' } })).statusCode, 202);
+    assert.ok((await jobs()).some(j => j.input_text === 'Fallback subject'));
+    for (const payload of [
+      { ...body.payload, body: '', subject: '' },
+      { ...body.payload, body: 'x'.repeat(1001) },
+      { ...body.payload, receivedAt: 'invalid' },
+      { ...body.payload, phoneNumber: 'invalid' }
+    ]) assert.equal((await call({ ...body, payload })).statusCode, 400);
+    const stale = { ...body, payload: { ...body.payload, messageId: 'mms-stale', receivedAt: '2020-01-01T00:00:00Z' } };
+    assert.equal((await call(stale)).json().expired, true);
+    assert.equal((await jobs()).length, 2);
+    assert.equal((await call({ ...stale, payload: { ...stale.payload, body: 'STOP' } })).statusCode, 202);
+    assert.equal((await db.query<Json>('select suppressed from mango_private.contacts')).rows[0].suppressed, true);
+  } finally { await app.close(); }
+});
+
 const response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
+test('data SMS decodes only valid bounded UTF-8 and retains authentication, SIM, sender and dedupe checks', async () => {
+  const h = harness(), app = productionApp(rpc, h.transport, { webhookSecret: 'secret', adminSecret: 'admin', deviceId: 'device', sim: 1 });
+  const body = { event: 'sms:data-received', deviceId: 'device', payload: {
+    messageId: 'data-1', sender: number, simNumber: 1, receivedAt: new Date().toISOString(),
+    data: Buffer.from('Hello Mango').toString('base64') } };
+  const call = (payload: any, authenticated = true) => app.inject({ method: 'POST', url: '/v1/channels/android/webhook',
+    headers: authenticated ? { 'x-mango-webhook-secret': 'secret' } : {}, payload });
+  try {
+    assert.equal((await call(body, false)).statusCode, 401);
+    assert.equal((await call({ ...body, deviceId: 'other' })).statusCode, 403);
+    assert.equal((await call({ ...body, payload: { ...body.payload, simNumber: 2 } })).statusCode, 403);
+    for (const data of ['not base64!', '/w==', 'AA==', Buffer.from('x'.repeat(1001)).toString('base64')]) {
+      assert.equal((await call({ ...body, payload: { ...body.payload, data } })).statusCode, 400);
+    }
+    assert.equal((await call(body)).statusCode, 202);
+    assert.equal((await call(body)).statusCode, 200);
+    assert.equal((await jobs()).length, 1);
+    assert.equal((await jobs())[0].input_text, 'Hello Mango');
+    assert.equal((await jobs())[0].phone, number);
+    const stop = { ...body, payload: { ...body.payload, messageId: 'data-stop', receivedAt: '2020-01-01T00:00:00Z', data: Buffer.from('STOP').toString('base64') } };
+    assert.equal((await call(stop)).statusCode, 202);
+    assert.equal((await db.query<Json>('select suppressed from mango_private.contacts')).rows[0].suppressed, true);
+    assert.equal((await call({ ...body, event: 'sms:batch:data-received' })).json().ignored, true);
+  } finally { await app.close(); }
+});
+
 test('Auth provisioning uses Admin API, re-reads concurrent winner and does not touch existing email', async () => {
   const calls: Json[] = [], id = randomUUID(); let lookups = 0;
   const http: Http = async (url, init) => {
@@ -388,6 +454,56 @@ test('Hermes accepts years, carries schema in system prompt and isolates identic
   await model.respond(input);
   assert.notEqual(sessions[0], sessions[1]);
   assert.ok(sessions.every(s => /^mango-turn-[0-9a-f-]{36}$/.test(s)));
+});
+
+test('Hermes rejection codes distinguish failures without exposing response content', async () => {
+  const cases: [string, string][] = [
+    ['private non-JSON response', 'json'],
+    [JSON.stringify({ text: 'hello', plan_id: null, recipient: 'private' }), 'fields'],
+    [JSON.stringify({ text: '', plan_id: null }), 'text'],
+    [JSON.stringify({ text: 'x'.repeat(501), plan_id: null }), 'length'],
+    [JSON.stringify({ text: 'Open https://example.com/private', plan_id: null }), 'redaction'],
+    [JSON.stringify({ text: 'Visit www.example.com', plan_id: null }), 'link'],
+    [JSON.stringify({ text: 'Enter 123456 to continue.', plan_id: null }), 'login_code'],
+    [JSON.stringify({ text: 'hello', plan_id: 'unknown-private-id' }), 'plan']
+  ];
+  for (const [content, reason] of cases) {
+    const model = new HermesConversation('http://localhost:8644', 'key', async () =>
+      response({ choices: [{ finish_reason: 'stop', message: { content } }] }));
+    await assert.rejects(model.respond({ text: 'hello', plans: [], history: [], selectedPlan: null }),
+      (error: unknown) => error instanceof SafeError && error.code === `invalid_model_response_${reason}`);
+  }
+});
+
+test('Hermes retries prose once in a fresh session and still validates the regenerated JSON', async () => {
+  for (const repaired of [
+    { text: 'What activities do you enjoy?', plan_id: null },
+    { text: 'Open https://example.com/l/private', plan_id: null }
+  ]) {
+    const sessions: string[] = [];
+    const model = new HermesConversation('http://localhost:8644', 'key', async (_url, init) => {
+      sessions.push(new Headers(init?.headers).get('x-hermes-session-id')!);
+      const body = JSON.parse(String(init?.body));
+      const input = JSON.parse(body.messages[1].content);
+      assert.match(input.output_contract, /Answer only with the JSON object/);
+      if (sessions.length === 2) assert.match(input.output_contract, /previous attempt failed JSON parsing/);
+      return response({ choices: [{ finish_reason: 'stop', message: {
+        content: sessions.length === 1 ? 'Unstructured model prose' : JSON.stringify(repaired)
+      } }] });
+    });
+    const pending = model.respond({ text: 'hello', plans: [], history: [], selectedPlan: null });
+    if (repaired.text.startsWith('Open')) await assert.rejects(pending, /invalid_model_response_redaction/);
+    else assert.deepEqual(await pending, { text: repaired.text, planId: null });
+    assert.equal(sessions.length, 2);
+    assert.notEqual(sessions[0], sessions[1]);
+  }
+  let calls = 0;
+  const invalid = new HermesConversation('http://localhost:8644', 'key', async () => {
+    calls++;
+    return response({ choices: [{ finish_reason: 'stop', message: { content: 'Still prose' } }] });
+  });
+  await assert.rejects(invalid.respond({ text: 'hello', plans: [], history: [], selectedPlan: null }), /invalid_model_response_json/);
+  assert.equal(calls, 2);
 });
 
 test('Hermes rejects numeric login instructions and partial results', async () => {
