@@ -1,6 +1,12 @@
 # Mango Agent Contract
 
-Allowed actions: `ASK_FOLLOWUP`, `RECOMMEND`, `EXPLAIN`, `REDIRECT`, `APP_UPSELL`, `NO_RESULT`.
+Allowed actions: `RESPOND`, `ASK_FOLLOWUP`, `RECOMMEND`, `EXPLAIN`, `REDIRECT`, `APP_UPSELL`, `NO_RESULT`.
+
+Allowed match types:
+
+- `exact`: the candidate directly provides the requested activity or place type.
+- `adjacent`: the candidate is a sensible related alternative, without claiming it provides the original activity.
+- `none`: no candidate is selected.
 
 Allowed profile proposals:
 
