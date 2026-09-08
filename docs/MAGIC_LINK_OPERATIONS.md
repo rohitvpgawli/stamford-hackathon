@@ -1,145 +1,98 @@
-# Mango magic-link operations
+# Mango production operations
 
-Current scope: the existing Mango experience, same phone and SMS Gate bridge,
-with phone-only web login. Website owner follows website-changes-handoff.md.
-Do not deploy the website or apply its migrations from this runbook implicitly.
+Production status verified 2026-09-08.
 
-## Current controlled test (2026-09-08)
+## Live architecture
 
-The authorized production worker is active on loopback **3001** with both
-release gates open; the legacy SMS service is stopped. The existing active
-Cloudflare tunnel still maps sms.bigmango.org to 3001. The 3002 references below
-describe the originally prepared deployment, not the current test routing.
-Public liveness, authenticated aggregate health, and an authenticated public
-MMS arrival probe pass. The probe only acknowledges metadata; it sends nothing.
-All six gateway configuration values match the legacy environment, and both
-MMS webhook registrations have the correct URL and shared secret.
+- Website: `https://www.bigmango.org`
+- Public SMS webhook: `https://sms.bigmango.org/v1/channels/android/webhook`
+- Cloudflare tunnel target: `127.0.0.1:3001`
+- Production SMS worker: `mango-magic-link.service`
+- Isolated Mango Hermes gateway: `hermes-gateway-magic-link.service` on `127.0.0.1:8644`
+- Protected worker configuration: `/home/ubuntu/.config/mango/magic-link.env`
+- Protected Hermes configuration: `/home/ubuntu/.config/mango/hermes-production.env`
+- Shared identity, queue, conversation state, and event catalog: production Supabase
 
-The production ingress previously ignored MMS, unlike the legacy service.
-It now acknowledges mms:received while waiting for mms:downloaded, then ingests
-the downloaded body or subject. It retains device/SIM, authentication, expiry,
-and deduplication checks, with the legacy 32KB payload bound. Attachments are
-not processed. Event type and HTTP status are logged without message contents,
-phone numbers, IDs, or credentials. Missing/wrong SIM still yields 403;
-oversized envelopes yield 413. The live MMS test completed end to end: the
-downloaded message was ingested, processed, sent through SMS Gate, and reached
-`delivered`.
+The two production services are enabled and active. The legacy
+`mango-sms-api.service` and `hermes-gateway-mango.service` are disabled and
+inactive. Do not run both SMS workers against the same webhook or phone.
 
-That test also exposed model responses arriving as prose or after the original
-15-second timeout. The worker now repeats the JSON contract beside the input,
-allows up to 50 seconds for the first model response within a 60-second total
-budget, and regenerates once only after a JSON parse failure. All content,
-event, link, and login-code validation remains enforced. Privacy-safe error
-codes identify the failed stage without logging message text, model output,
-phone numbers, IDs, or credentials. Production tests and build pass.
+## Verified journeys
 
-## Originally prepared runtime
+Both production journeys completed successfully on 2026-09-08:
 
-- Existing mango gateway: loopback 8643; existing SMS service: loopback 3001.
-- Adapted mango-production gateway: loopback 8644, same configured model/voice,
-  no general-purpose tools or shared personal history. Its model only chooses
-  conversation wording and a supplied event; backend owns identity/link/send.
-- Production SMS worker: loopback 3002, output apps/sms-api/.production-dist.
-  No SQLite or seed-data imports. Do not overwrite the live legacy dist folder.
-- Protected worker env: /home/ubuntu/.config/mango/magic-link.env, mode 0600.
-  It reuses existing SMS Gate device/SIM/credentials/webhook secret and web
-  Supabase/APP_URL/MANGO_LOGIN_SECRET. New outbox/admin secrets stay local.
-- Protected Hermes client fragment: /home/ubuntu/.config/mango/hermes-production.env.
-- Worker unit installed/registered but disabled and inactive; both gates false.
-  Existing tunnel route unchanged. SMS Gate metadata confirms the configured
-  device is online; this does not yet validate actual callback fields/delivery.
+1. A person texted Mango, received an event-specific magic link, opened the web
+   app, and continued into profile setup.
+2. A person entered their phone on the website discovery/login flow and received
+   a Mango SMS containing a working signup link.
 
-The same configured device and SIM select the existing Mango number.
-MANGO_RECEIVING_PHONE is optional extra checking if callbacks include recipient.
-A mismatched device/SIM always fails. Never loosen callback authentication.
+The live MMS test was accepted as `mms:downloaded`, processed by Hermes, sent
+through SMS Gate, and reported `delivered`. The public tunnel, configured
+device/SIM, webhook secret, Supabase schema, catalog, web issuer, and phone
+availability all passed their production checks.
 
-## Local checks and configuration
+## Runtime behavior
 
-Run sequentially on this small EC2 host; never parallelize heavy database tests
-and web builds. Do not rebuild the website as part of agent work.
+SMS and MMS callbacks require the shared webhook secret and configured device
+and SIM. `mms:received` waits for `mms:downloaded`; only its text body or subject
+is processed. Attachments are ignored. Duplicate callbacks are deduplicated.
+
+Hermes receives sanitized conversation context and published upcoming events.
+It cannot send SMS, access Supabase directly, choose arbitrary recipients, or
+see magic-link credentials. Deterministic worker code validates event IDs,
+issues links, binds the destination phone, and sends messages. Model replies are
+limited to a 60-second total budget, with one regeneration after non-JSON output.
+All link, login-code, event, length, and redaction checks still apply.
+
+Logs contain fixed event/status/error codes only. They must never contain SMS
+text, phone numbers, magic links, message IDs, access tokens, or secrets.
+
+## Basic checks
 
 ```sh
-npm run production:build --workspace @mango/sms-api
+systemctl --user is-active mango-magic-link.service
+systemctl --user is-active hermes-gateway-magic-link.service
+curl -sS http://127.0.0.1:3001/health
+curl -sS http://127.0.0.1:8644/health
 npm run production:test --workspace @mango/sms-api
-node apps/sms-api/scripts/production-preflight.mjs
+npm run production:build --workspace @mango/sms-api
 ```
 
-Tests use in-memory PGlite and fake HTTP/SMS. They do not prove real Supabase
-sessions, real phone delivery, or multi-connection database concurrency.
+Authenticated `/v1/admin/health` is the operational check for queue depth,
+catalog readiness, failure counts, and phone availability. Public `/health`
+only proves the HTTP process is alive.
 
-The optional actual-adapter fixture uses a temporary Hermes home and stubbed
-model, no phone or database:
-```sh
-/home/ubuntu/.hermes/hermes-agent/venv/bin/python apps/sms-api/test/hermes_adapter_integration.py
-```
+## Changing the Mango phone number
 
-Configuration is ALREADY provisioned here. For a fresh installation only,
-node apps/sms-api/scripts/configure-production.mjs imports the allowlisted
-existing credentials, generates independent local secrets and closes both
-gates. It refuses overwrites. Optional --phone +E164 enables the extra guard.
-Do not rotate the outbox key with pending jobs or change webhook secrets without
-coordinating SMS Gate. Never paste secrets into docs/prompts.
+Changing the number is straightforward when the existing Android device and SMS
+Gate account remain in use:
 
-## Website dependency
+1. Move or activate the new carrier number on the intended SIM and confirm SMS
+   Gate can receive and send on it.
+2. Update `MANGO_RECEIVING_PHONE` in the protected worker environment if that
+   optional recipient check is configured. Update `ANDROID_GATEWAY_SIM_NUMBER`
+   if the line moved between SIM slots.
+3. Restart `mango-magic-link.service`, verify authenticated health, then run one
+   inbound and one website-originated link test.
 
-Hand website-changes-handoff.md to the web agent. They should import the CURRENT
-apps/sms-api/migrations/001_magic_link.sql into the web migration ledger once,
-not both that file and its old draft copy. The agent migration now maps real
-public.plans itself; missing compatible schema remains fail-closed.
+For a new Android device, also update `ANDROID_GATEWAY_DEVICE_ID` and any changed
+SMS Gate credentials, recreate the webhook registrations for the new device
+using the existing public URL and shared secret, and then restart and test. The
+Cloudflare tunnel, Supabase schema, website API, and Hermes profile do not
+change. Existing users remain associated with their original phone identities;
+changing Mango's receiving line does not migrate user accounts.
 
-Web owner implements request -> unconfirmed Auth account -> enqueue, plus
-safe issuer/redemption and preserved event destination. Shared public origin:
-https://www.bigmango.org. Same Supabase project and MANGO_LOGIN_SECRET both sides.
-No Vercel token is needed on this EC2 for agent work.
+## Deferred production hardening
 
-No production migration has been applied here. Backup was explicitly waived;
-that does not authorize deployment. Record intended project and migration
-checksum, review existing ledger/seed behavior, and coordinate compatible
-web code before changing old token RPC grants. Do not drop users/tables.
+- Refine Mango's voice and conversational details in the production Soul.
+- Add adversarial prompt-injection evaluations and regression cases for requests
+  for scripts, coding, system prompts, secrets, or unrelated work.
+- Define and enforce daily inbound, model, and outbound SMS limits per phone and
+  global spend limits, with clear user messaging and operator visibility.
+- Add queue-age, phone-offline, delivery-failure, and spend alerts.
+- Revisit backup and restore operations; backup work was deferred by the owner.
 
-## Controlled acceptance and cutover: requires approval
-
-1. Web owner confirms shared schema and login changes ready.
-2. Review status-only preflight and existing device/SIM subscription. Verify an
-   authenticated actual sms:received callback supplies deviceId, simNumber,
-   sender, messageId and receivedAt. No personal inbox/history exports.
-3. Install deploy/mango-magic-link.service in user systemd if not already present.
-   With explicit test authorization, open both protected gates and start worker.
-   Keep admin health private; authenticated /v1/admin/health checks DB/catalog
-   and phone availability. /health alone is just process liveness.
-4. Point the EXISTING Cloudflare webhook path at loopback 3002 only when ready.
-   Never expose Hermes 8644 or admin routes. Prevent duplicate legacy and
-   production subscriptions/senders. Do not change the phone number.
-5. Test both new/returning phone journeys, event destination through onboarding,
-   scanner-safe redemption, STOP, resend cooldown and offline recovery.
-6. Verify message states and browser session, not just generic enqueue acceptance.
-
-Callbacks require shared secret header or existing ?token= convention. Disable
-URL/header/body logging at every proxy if using a query secret. Require the
-configured device and SIM; old ordinary inbound (>10 minutes) expires, stale
-STOP still applies and stale START cannot re-enable messaging.
-
-## Failure handling and retained safeguards
-
-Queue leases fence stale workers. Stable transport IDs and durable send markers
-prevent blind resends after ambiguous HTTP outcomes. Accepted, sent and delivered
-are distinct; missing status is not proof a send never happened. Reconciliation
-ends at expiry/eight claims. Do not clear issuance/send markers to retry.
-Issuance has no idempotency contract; ambiguous issuance requires a new request.
-
-Outbox links are encrypted with job-bound AES-GCM and purged on acceptance or
-expiry. No link enters model context/logs. Conversation bodies expire after
-30 days; identifiers/suppression/deduplication remain. Hermes sanitized
-transcripts need a separately agreed retention policy.
-
-STOP cancels unsent work and is rechecked at send authorization. Already
-in-flight transport sends cannot be reliably recalled. Do not promise exactly
-once delivery or exemption from provider/carrier rules.
-
-For rollback, pause website enqueue and production ingress, stop worker, retain
-private tables and delivery markers. Do not restore/replay accepted or uncertain
-jobs. Old SQLite/demo runtime is not a production login rollback.
-No legacy personal messages, seed users or demo matches are migrated.
-
-External queue/phone alerting and post-launch retention ownership remain
-operational setup, not silently configured services.
+The current prompt already scopes Mango to Stamford activities, treats user and
+event text as untrusted, exposes no tools, and rejects links or arbitrary event
+IDs from model output. The items above add testing and operational limits around
+those existing controls.
