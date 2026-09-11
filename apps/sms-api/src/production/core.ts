@@ -114,11 +114,11 @@ export class Worker {
         let result: { text: string; planId: string | null };
         const selectedCommitment = /^(?:join|rsvp|yes|yes please|i['’]?m in|count me in|save it|sign me up|add me(?: to (?:this|that))?|send (?:me )?(?:the )?link)[.! ]*$/i.test(text.trim());
         if (login && selected && selectedCommitment) {
-          result = { text: 'Open your Mango link to view this event. Joining is confirmed in the app.', planId: selected.id };
+          result = { text: 'Excellent choice. Open your Mango link to view it. Joining happens in the app.', planId: selected.id };
         } else if (login && !selected && selectedCommitment) {
-          result = { text: 'Which event do you have in mind? Tell me its name or what you feel like doing.', planId: null };
+          result = { text: 'A mystery event, intriguing. Which one do you mean? Tell me its name or what you feel like doing.', planId: null };
         } else if (login && /\b(sign[ -]?in|log[ -]?in|magic link)\b/i.test(text)) {
-          result = { text: 'Your Mango sign-in link is on its way.', planId: null };
+          result = { text: 'A little digital fanfare: your Mango sign-in link is on its way.', planId: null };
         } else {
           result = await this.conversation.respond({ text, plans,
             history: (context.history || []).map((h: Json) => ({ role: h.role, text: redactText(h.text) })),
@@ -142,11 +142,11 @@ export class Worker {
           const issued = await this.issuer.issue(job.phone, job.plan_id);
           const greeting = job.source === 'web'
             ? 'Welcome to Mango! Your next good plan starts here.'
-            : (job.reply_text || 'Your Mango sign-in link is ready.').slice(0, 320);
+            : (job.reply_text || 'Your Mango sign-in link is ready. Tiny doorway, better plans.').slice(0, 320);
           body = `${greeting}\n${job.plan_id ? 'View your event and sign in' : 'Sign in'}: ${issued.url}\nExpires in 10 minutes. Reply STOP to stop texts.`;
           expiresAt = new Date(Math.min(Date.parse(issued.expiresAt), Date.parse(job.expires_at))).toISOString();
         } else {
-          body = job.reply_text || 'Mango is temporarily unavailable. Please try again.';
+          body = job.reply_text || 'A tiny plot twist: Mango is temporarily unavailable. Please try again in a moment.';
         }
         await this.rpc('stage', { ...lease, ciphertext: this.vault.seal(body, job.id), expires_at: expiresAt });
       }

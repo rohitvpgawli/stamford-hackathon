@@ -12,6 +12,10 @@ import { productionApp } from '../src/production/server.js';
 let db: PGlite;
 const number = '+12035550123', planId = '11111111-1111-4111-8111-111111111111';
 const vault = new Vault(Buffer.alloc(32, 7).toString('base64'));
+test('Custom config uses a non-paid auxiliary lane', async () => {
+  const config = await readFile(new URL('../../../deploy/hermes-magic-link/config.overlay.yaml', import.meta.url), 'utf8');
+  assert.match(config, /^auxiliary:\n {2}free_only: true$/m);
+});
 test('Supabase secret keys use apikey only; legacy JWT keys retain bearer authentication', async () => {
   for (const key of ['sb_secret_test-only', 'legacy-jwt-test-only']) {
     const http: Http = async (_url, init) => {
@@ -143,7 +147,7 @@ test('bare commitment without prior selection asks which event instead of invent
   await h.worker.tick(); await h.worker.tick(); await h.worker.tick();
   assert.equal(h.prompts.length, 0);
   assert.equal(h.issues.length, 0);
-  assert.match(h.sends[0].text, /Which event/);
+  assert.match(h.sends[0].text, /mystery event.*Which one/i);
 });
 
 test('natural join request reuses selected plan and avoids another model decision', async () => {
@@ -155,7 +159,7 @@ test('natural join request reuses selected plan and avoids another model decisio
   await h.worker.tick(); await h.worker.tick(); await h.worker.tick();
   assert.equal(h.prompts.length, 1);
   assert.deepEqual(h.issues.map(issue => issue.plan), [planId, planId]);
-  assert.match(h.sends[1].text, /Joining is confirmed in the app/);
+  assert.match(h.sends[1].text, /Excellent choice.*Joining happens in the app/);
 });
 
 test('duplicate inbound and website resend bursts produce one job', async () => {
@@ -447,6 +451,7 @@ test('Hermes accepts years, carries voice and schema in system prompt and isolat
     assert.match(body.messages[0].content, /Never be cruel/);
     assert.match(body.messages[0].content, /corporate, sterile/);
     assert.match(body.messages[0].content, /Do not medicalize/);
+    assert.match(body.messages[0].content, /Never promise to search/);
     const context = JSON.parse(body.messages[1].content);
     assert.equal(context.time_zone, 'America/New_York');
     assert.ok(Number.isFinite(Date.parse(context.current_time)));

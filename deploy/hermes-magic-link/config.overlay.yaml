@@ -4,6 +4,9 @@ model:
   provider: openrouter
   base_url: https://openrouter.ai/api/v1
   api_mode: chat_completions
+# Auxiliary tasks must never spill into a paid fallback model.
+auxiliary:
+  free_only: true
 agent:
   max_turns: 4
 memory:
