@@ -4,8 +4,8 @@ Production status verified 2026-09-08.
 
 ## Live architecture
 
-- Website: `https://www.bigmango.org`
-- Public SMS webhook: `https://sms.bigmango.org/v1/channels/android/webhook`
+- Website: `https://stamford.fyi`
+- Public SMS webhook: `https://sms.stamford.fyi/v1/channels/android/webhook`
 - Cloudflare tunnel target: `127.0.0.1:3001`
 - Production SMS worker: `mango-magic-link.service`
 - Isolated Mango Hermes gateway: `hermes-gateway-magic-link.service` on `127.0.0.1:8644`

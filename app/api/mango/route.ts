@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE = process.env.MANGO_API_BASE_URL || "https://sms.bigmango.org";
+const API_BASE = process.env.MANGO_API_BASE_URL || "https://sms.stamford.fyi";
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get("token") || "";
