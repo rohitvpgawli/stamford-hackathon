@@ -1,7 +1,7 @@
 // Copy only Mango's refreshed model-provider key. Gateway keys stay independent.
 import { readFileSync, writeFileSync, chmodSync } from 'node:fs';
 import { parseEnv } from 'node:util';
-const source = '/home/ubuntu/.hermes/profiles/mango/.env';
+const source = process.env.HERMES_PROVIDER_ENV || '/home/ubuntu/.config/mango/hermes-provider.env';
 const target = '/home/ubuntu/.hermes/profiles/mango-production/.env';
 const key = parseEnv(readFileSync(source, 'utf8')).OPENROUTER_API_KEY;
 if (!key || /[\r\n]/.test(key)) throw new Error('Source provider key unavailable');

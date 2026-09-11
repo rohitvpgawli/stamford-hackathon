@@ -37,6 +37,8 @@ yarn-error.log*
 
 /dist/
 **/dist/
+**/.production-dist/
+**/.regression-dist/
 *.tsbuildinfo
 data/
 /.wrangler/

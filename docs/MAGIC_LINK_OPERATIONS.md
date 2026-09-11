@@ -1,6 +1,6 @@
 # Mango production operations
 
-Production status verified 2026-09-08.
+Production status verified 2026-09-11.
 
 ## Live architecture
 
@@ -13,9 +13,8 @@ Production status verified 2026-09-08.
 - Protected Hermes configuration: `/home/ubuntu/.config/mango/hermes-production.env`
 - Shared identity, queue, conversation state, and event catalog: production Supabase
 
-The two production services are enabled and active. The legacy
-`mango-sms-api.service` and `hermes-gateway-mango.service` are disabled and
-inactive. Do not run both SMS workers against the same webhook or phone.
+The two production services are enabled and active. No demo SMS worker or
+legacy Hermes profile is installed.
 
 ## Verified journeys
 
@@ -61,6 +60,11 @@ npm run production:build --workspace @mango/sms-api
 Authenticated `/v1/admin/health` is the operational check for queue depth,
 catalog readiness, failure counts, and phone availability. Public `/health`
 only proves the HTTP process is alive.
+
+The Hermes model-provider credential is kept separately at
+`/home/ubuntu/.config/mango/hermes-provider.env` with mode `0600`. Installation
+and provider-key synchronization read that file by default; set
+`HERMES_PROVIDER_ENV` only when using another protected path.
 
 ## Changing the Mango phone number
 

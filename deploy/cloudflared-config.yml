@@ -14,8 +14,5 @@ credentials-file: /etc/cloudflared/<TUNNEL-UUID>.json
 ingress:
   - hostname: sms.stamford.fyi
     service: http://127.0.0.1:3001
-  # Keep the former hostname during the webhook migration window.
-  - hostname: sms.bigmango.org
-    service: http://127.0.0.1:3001
   # Any hostname/path that is not the one above is refused at the tunnel.
   - service: http_status:404

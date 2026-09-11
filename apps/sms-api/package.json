@@ -4,19 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "start": "node dist/src/index.js",
-    "dev": "tsx watch src/index.ts",
-    "test": "npm run build && NODE_ENV=test node --test dist/test/core.test.js",
-    "load-test": "NODE_ENV=test node --import tsx scripts/load-test.ts",
-    "sms-e2e": "node --import tsx scripts/sms-e2e.ts",
+    "build": "npm run production:build",
+    "typecheck": "npm run production:typecheck",
+    "test": "npm run production:test",
+    "start": "node .production-dist/index.js",
     "production:build": "tsc -p tsconfig.production.json",
-    "production:test": "node --import tsx --test --test-concurrency=1 test/production.test.ts test/production-catalog.test.ts test/production-preflight.test.mjs test/configure-production.test.mjs",
-    "production:start": "node .production-dist/index.js"
+    "production:typecheck": "tsc -p tsconfig.production.json --noEmit",
+    "production:test": "node --import tsx --test --test-concurrency=1 test/production.test.ts test/production-catalog.test.ts test/production-preflight.test.mjs test/configure-production.test.mjs"
   },
   "dependencies": {
-    "@mango/contracts": "*",
     "fastify": "^5.12.3"
   },
   "devDependencies": {

@@ -15,9 +15,10 @@ const unit = '/home/ubuntu/.config/systemd/user/hermes-gateway-magic-link.servic
 for (const path of [profile, fragment, unit]) {
   if (existsSync(path)) throw new Error('Installation target already exists; inspect it before updating.');
 }
-// Read only the existing Mango profile's provider key, never its auth sessions,
-// conversations, skills, or database/SMS configuration.
-const providerKey = parseEnv(readFileSync('/home/ubuntu/.hermes/profiles/mango/.env', 'utf8')).OPENROUTER_API_KEY;
+// Read only the dedicated provider credential; never couple production setup
+// to another Hermes profile's auth sessions, conversations, or state.
+const providerSource = process.env.HERMES_PROVIDER_ENV || '/home/ubuntu/.config/mango/hermes-provider.env';
+const providerKey = parseEnv(readFileSync(providerSource, 'utf8')).OPENROUTER_API_KEY;
 if (!providerKey || /[\r\n]/.test(providerKey)) throw new Error('Mango provider credential is unavailable.');
 execFileSync('/home/ubuntu/.hermes/hermes-agent/venv/bin/python', [
   '-m', 'hermes_cli.main', 'profile', 'create', 'mango-production', '--no-skills', '--no-alias',
