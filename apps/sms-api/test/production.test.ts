@@ -433,7 +433,7 @@ test('Hermes rejects recipient overrides, invented plans and bearer-link output'
   }
 });
 
-test('Hermes accepts years, carries schema in system prompt and isolates identical requests', async () => {
+test('Hermes accepts years, carries voice and schema in system prompt and isolates identical requests', async () => {
   const sessions: string[] = [];
   const model = new HermesConversation('http://localhost:8644', 'key', async (_url, init) => {
     const headers = new Headers(init?.headers), body = JSON.parse(String(init?.body));
@@ -443,6 +443,10 @@ test('Hermes accepts years, carries schema in system prompt and isolates identic
     assert.match(body.messages[0].content, /"required":\["text","plan_id"\]/);
     assert.match(body.messages[0].content, /related alternative/);
     assert.match(body.messages[0].content, /Remember explicitly shared first names/);
+    assert.match(body.messages[0].content, /dash of camp/);
+    assert.match(body.messages[0].content, /Never be cruel/);
+    assert.match(body.messages[0].content, /corporate, sterile/);
+    assert.match(body.messages[0].content, /Do not medicalize/);
     const context = JSON.parse(body.messages[1].content);
     assert.equal(context.time_zone, 'America/New_York');
     assert.ok(Number.isFinite(Date.parse(context.current_time)));
