@@ -19,14 +19,14 @@ returns only a generic acknowledgement and never exposes a link or session.
 ## Agent to website
 
 ```http
-POST https://www.bigmango.org/api/login?action=issue
+POST https://stamford.fyi/api/login?action=issue
 x-mango-login-secret: <shared server secret>
 content-type: application/json
 
 {"phone":"+1...","ttl_seconds":600,"plan_id":"<optional UUID>"}
 ```
 
-Success is `201` with `{ "url": "https://www.bigmango.org/l/<token>",
+Success is `201` with `{ "url": "https://stamford.fyi/l/<token>",
 "expires_in": 600 }`. The worker sends the URL verbatim and never fetches,
 previews, shortens, logs, or exposes it to Hermes.
 
